@@ -240,14 +240,12 @@ html, body {
 
 /* ── PROSE HUB ── */
 .wheel-prose-hub {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 1;
   width: 100%;
   max-width: 800px;
   padding: 0 2rem;
+  margin-top: 3rem;
 }
 
 .prose-grid {
