@@ -1,0 +1,113 @@
+/* ── WHEEL PAGE ── */
+  #wheel-page {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1.2s ease;
+  }
+
+  #wheel-page.visible { opacity: 1; pointer-events: all; }
+
+  .wheel-bg {
+    position: absolute; inset: 0;
+    background: var(--black);
+  }
+
+  .wheel-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, #1c1508 0%, #0d0b09 70%);
+  }
+
+  .wheel-title {
+    position: absolute; top: 2rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+
+  .wheel-hint {
+    position: absolute; bottom: 2rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ash);
+    letter-spacing: 0.05em;
+  }
+
+  #wheel-svg {
+    position: relative; z-index: 1;
+    width: min(85vw, 85vh);
+    height: min(85vw, 85vh);
+  }
+
+  .wheel-ring { fill: none; stroke: var(--ash); stroke-width: 0.5; opacity: 0.3; }
+  .wheel-ring-outer { fill: none; stroke: var(--amber); stroke-width: 0.8; opacity: 0.2; }
+  .wheel-spoke { stroke: var(--ash); stroke-width: 0.4; opacity: 0.2; }
+  .wheel-cross-spoke { stroke: var(--ash); stroke-width: 0.3; opacity: 0.15; stroke-dasharray: 2 3; }
+
+  .sabbat-node { cursor: pointer; transition: all 0.2s ease; }
+
+  .sabbat-node circle {
+    fill: var(--black);
+    stroke: var(--ash);
+    stroke-width: 0.8;
+    transition: all 0.3s ease;
+  }
+
+  .sabbat-node:hover circle,
+  .sabbat-node:focus-visible circle,
+  .sabbat-node.active circle {
+    fill: rgba(193,127,58,0.15);
+    stroke: var(--amber-bright);
+    stroke-width: 1.2;
+    filter: drop-shadow(0 0 4px rgba(240,168,85,0.5));
+  }
+
+  .sabbat-node text.node-name {
+    font-family: 'Cinzel', serif;
+    font-size: 5.5px;
+    fill: var(--parchment-dim);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: fill 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .sabbat-node:hover text.node-name,
+  .sabbat-node:focus-visible text.node-name,
+  .sabbat-node.active text.node-name { fill: var(--amber-bright); }
+
+  .sabbat-node text.node-date {
+    font-family: 'EB Garamond', serif;
+    font-size: 4px;
+    fill: var(--ash);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  .sabbat-node:hover text.node-date { fill: var(--parchment-dim); }
+
+  .wheel-centre-title {
+    font-family: 'Cinzel', serif;
+    font-size: 7px;
+    fill: var(--parchment-dim);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: 1px;
+  }
+
+  .season-label {
+    font-family: 'Cinzel', serif;
+    font-size: 4px;
+    fill: var(--amber);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: 0.8px;
+    opacity: 0.5;
+  }

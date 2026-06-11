@@ -1,0 +1,129 @@
+/* ── READING MODAL ── */
+  #reading-overlay {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease;
+    overflow-y: auto;
+  }
+
+  #reading-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .reading-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .reading-back {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: none; border: none;
+    color: var(--ash);
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 3rem;
+    transition: color 0.2s;
+    padding: 0;
+  }
+
+  .reading-back:hover { color: var(--amber); }
+  .reading-back::before { content: '←'; font-family: serif; font-size: 1rem; }
+
+  .reading-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--modal-border);
+  }
+
+  .reading-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .reading-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .reading-date {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--amber);
+    letter-spacing: 0.05em;
+  }
+
+  .reading-image {
+    width: 100%;
+    margin-bottom: 3rem;
+    border: 1px solid var(--modal-border);
+    opacity: 0.85;
+    display: block;
+  }
+
+  /* prose text */
+  .reading-body {
+    font-size: 1.1rem;
+    line-height: 1.95;
+    color: var(--parchment);
+  }
+
+  .reading-body p {
+    margin-bottom: 1.4em;
+  }
+
+  .reading-body p.section-break {
+    text-align: center;
+    color: var(--amber);
+    margin: 2.5em 0;
+    letter-spacing: 0.3em;
+  }
+
+  .reading-body em { color: var(--parchment-dim); }
+
+  /* poetry text — tighter, centred option */
+  .reading-body.poetry {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .reading-body.poetry p {
+    margin-bottom: 0.4em;
+  }
+
+  .reading-body.poetry p.stanza-break {
+    margin-bottom: 1.8em;
+  }
+
+  .reading-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    margin: 3rem auto;
+  }
+
+  #reading-overlay::-webkit-scrollbar { width: 4px; }
+  #reading-overlay::-webkit-scrollbar-track { background: var(--black); }
+  #reading-overlay::-webkit-scrollbar-thumb { background: var(--modal-border); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .modal { grid-template-columns: 1fr; }
+    .modal-image { grid-column: 1; }
+    .modal-content { grid-column: 1; padding: 0 1.5rem 1.5rem; }
+    .modal-footer { grid-column: 1; }
+  }

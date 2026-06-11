@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wheel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./src/styles/base.css">
+<link rel="stylesheet" href="./src/styles/landing.css">
+<link rel="stylesheet" href="./src/styles/wheel.css">
+<link rel="stylesheet" href="./src/styles/modal.css">
+<link rel="stylesheet" href="./src/styles/reading.css">
+</head>
+<body>
+
+<!-- ── LANDING ── -->
+<div id="landing">
+  <div class="landing-bg"></div>
+  <div class="landing-content">
+    <p class="landing-eyebrow">A collection</p>
+    <h1 class="landing-title">
+      The Wheel
+      <span>of the year</span>
+    </h1>
+    <div class="landing-divider"></div>
+    <p class="landing-sub"><em>This is the cycle. This is the cost.</em></p>
+    <button class="enter-btn" id="enter-btn">Enter</button>
+  </div>
+</div>
+
+<!-- ── WHEEL PAGE ── -->
+<div id="wheel-page">
+  <div class="wheel-bg"></div>
+  <p class="wheel-title">The Wheel</p>
+
+  <svg id="wheel-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="92" class="wheel-ring-outer"/>
+    <circle cx="100" cy="100" r="78" class="wheel-ring"/>
+    <circle cx="100" cy="100" r="24" class="wheel-ring" opacity="0.2"/>
+    <circle cx="100" cy="100" r="50" class="wheel-ring" opacity="0.1"/>
+    <line x1="100" y1="22" x2="100" y2="178" class="wheel-spoke"/>
+    <line x1="22" y1="100" x2="178" y2="100" class="wheel-spoke"/>
+    <line x1="44.9" y1="44.9" x2="155.1" y2="155.1" class="wheel-cross-spoke"/>
+    <line x1="155.1" y1="44.9" x2="44.9" y2="155.1" class="wheel-cross-spoke"/>
+    <text x="100" y="58" class="season-label" opacity="0.3">DARK HALF</text>
+    <text x="100" y="148" class="season-label" opacity="0.3">LIGHT HALF</text>
+    <text x="100" y="97" class="wheel-centre-title">THE</text>
+    <text x="100" y="104" class="wheel-centre-title">WHEEL</text>
+
+    <g class="sabbat-node" data-sabbat="yule" tabindex="0" role="button">
+      <circle cx="100" cy="22" r="10"/>
+      <text x="100" y="21" class="node-name">YULE</text>
+      <text x="100" y="27" class="node-date">Winter Solstice</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="imbolc" tabindex="0" role="button">
+      <circle cx="145.1" cy="44.9" r="10"/>
+      <text x="145.1" y="43.9" class="node-name">IMBOLC</text>
+      <text x="145.1" y="49.9" class="node-date">~1 February</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="ostara" tabindex="0" role="button">
+      <circle cx="178" cy="100" r="10"/>
+      <text x="178" y="99" class="node-name">OSTARA</text>
+      <text x="178" y="105" class="node-date">Spring Equinox</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="beltane" tabindex="0" role="button">
+      <circle cx="155.1" cy="155.1" r="10"/>
+      <text x="155.1" y="154.1" class="node-name">BELTANE</text>
+      <text x="155.1" y="160.1" class="node-date">~1 May</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="litha" tabindex="0" role="button">
+      <circle cx="100" cy="178" r="10"/>
+      <text x="100" y="177" class="node-name">LITHA</text>
+      <text x="100" y="183" class="node-date">Summer Solstice</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="lughnasadh" tabindex="0" role="button">
+      <circle cx="44.9" cy="155.1" r="10"/>
+      <text x="44.9" y="154.1" class="node-name">LUGHNASADH</text>
+      <text x="44.9" y="160.1" class="node-date">~1 August</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="mabon" tabindex="0" role="button">
+      <circle cx="22" cy="100" r="10"/>
+      <text x="22" y="99" class="node-name">MABON</text>
+      <text x="22" y="105" class="node-date">Autumn Equinox</text>
+    </g>
+
+    <g class="sabbat-node" data-sabbat="samhain" tabindex="0" role="button">
+      <circle cx="44.9" cy="44.9" r="10"/>
+      <text x="44.9" y="43.9" class="node-name">SAMHAIN</text>
+      <text x="44.9" y="49.9" class="node-date">~31 October</text>
+    </g>
+  </svg>
+
+  <p class="wheel-hint">Select a sabbat to read</p>
+</div>
+
+<!-- ── PREVIEW MODAL ── -->
+<div id="modal-overlay" >
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-sabbat-name" id="modal-name">—</h2>
+        <p class="modal-sabbat-date" id="modal-date">—</p>
+      </div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-image" id="modal-image-area">
+      <div class="modal-image-placeholder" id="modal-image-wrap">
+        <span>Image forthcoming</span>
+      </div>
+    </div>
+    <div class="modal-content">
+      <p class="modal-description" id="modal-description">—</p>
+      <p class="modal-text-label" id="modal-text-label">—</p>
+      <div class="modal-excerpt" id="modal-excerpt">—</div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-link" id="modal-read-btn">Read the full piece</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── READING MODAL ── -->
+<div id="reading-overlay">
+  <div class="reading-inner">
+    <button class="reading-back" id="reading-back">Back to the wheel</button>
+    <div class="reading-header">
+      <p class="reading-eyebrow" id="reading-eyebrow">—</p>
+      <h1 class="reading-title" id="reading-title">—</h1>
+      <p class="reading-date" id="reading-date">—</p>
+    </div>
+    <img id="reading-image" class="reading-image" src="" alt="" style="display:none"/>
+    <div class="reading-divider"></div>
+    <div class="reading-body" id="reading-body"></div>
+  </div>
+</div>
+
+<script type="module" src="./src/scripts/main.js"></script>
+</body>
+</html>

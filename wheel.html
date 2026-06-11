@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wheel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0d0b09;
+    --parchment: #e8dcc8;
+    --parchment-dim: #a89880;
+    --amber: #c17f3a;
+    --amber-bright: #f0a855;
+    --forest: #2a3d2e;
+    --ash: #6b6560;
+    --modal-bg: #141210;
+    --modal-border: #3a3028;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--black);
+    color: var(--parchment);
+    font-family: 'EB Garamond', serif;
+    overflow: hidden;
+  }
+
+  /* ── LANDING ── */
+  #landing {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 10;
+    transition: opacity 1.2s ease;
+  }
+
+  #landing.hidden { opacity: 0; pointer-events: none; }
+
+  .landing-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at center, rgba(13,11,9,0.3) 0%, rgba(13,11,9,0.85) 60%, rgba(13,11,9,0.98) 100%),
+      repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(193,127,58,0.015) 2px, rgba(193,127,58,0.015) 4px
+      );
+    background-color: #1a1208;
+  }
+
+  .landing-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .landing-content {
+    position: relative; z-index: 1;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 2rem;
+  }
+
+  .landing-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--amber);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.3s forwards;
+  }
+
+  .landing-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 400;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.6s forwards;
+  }
+
+  .landing-title span {
+    display: block;
+    font-size: 0.4em;
+    letter-spacing: 0.3em;
+    color: var(--parchment-dim);
+    margin-top: 0.5rem;
+  }
+
+  .landing-divider {
+    width: 120px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.9s forwards;
+  }
+
+  .landing-sub {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--parchment-dim);
+    max-width: 40ch;
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1.1s forwards;
+  }
+
+  .enter-btn {
+    margin-top: 1rem;
+    background: none;
+    border: 1px solid var(--amber);
+    color: var(--amber);
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    padding: 0.9rem 2.5rem;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 1.4s forwards;
+  }
+
+  .enter-btn:hover { background: var(--amber); color: var(--black); }
+
+  /* ── WHEEL PAGE ── */
+  #wheel-page {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 1.2s ease;
+  }
+
+  #wheel-page.visible { opacity: 1; pointer-events: all; }
+
+  .wheel-bg {
+    position: absolute; inset: 0;
+    background: var(--black);
+  }
+
+  .wheel-bg::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, #1c1508 0%, #0d0b09 70%);
+  }
+
+  .wheel-title {
+    position: absolute; top: 2rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+
+  .wheel-hint {
+    position: absolute; bottom: 2rem;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--ash);
+    letter-spacing: 0.05em;
+  }
+
+  #wheel-svg {
+    position: relative; z-index: 1;
+    width: min(85vw, 85vh);
+    height: min(85vw, 85vh);
+  }
+
+  .wheel-ring { fill: none; stroke: var(--ash); stroke-width: 0.5; opacity: 0.3; }
+  .wheel-ring-outer { fill: none; stroke: var(--amber); stroke-width: 0.8; opacity: 0.2; }
+  .wheel-spoke { stroke: var(--ash); stroke-width: 0.4; opacity: 0.2; }
+  .wheel-cross-spoke { stroke: var(--ash); stroke-width: 0.3; opacity: 0.15; stroke-dasharray: 2 3; }
+
+  .sabbat-node { cursor: pointer; transition: all 0.2s ease; }
+
+  .sabbat-node circle {
+    fill: var(--black);
+    stroke: var(--ash);
+    stroke-width: 0.8;
+    transition: all 0.3s ease;
+  }
+
+  .sabbat-node:hover circle,
+  .sabbat-node.active circle {
+    fill: rgba(193,127,58,0.15);
+    stroke: var(--amber-bright);
+    stroke-width: 1.2;
+    filter: drop-shadow(0 0 4px rgba(240,168,85,0.5));
+  }
+
+  .sabbat-node text.node-name {
+    font-family: 'Cinzel', serif;
+    font-size: 5.5px;
+    fill: var(--parchment-dim);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    transition: fill 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .sabbat-node:hover text.node-name,
+  .sabbat-node.active text.node-name { fill: var(--amber-bright); }
+
+  .sabbat-node text.node-date {
+    font-family: 'EB Garamond', serif;
+    font-size: 4px;
+    fill: var(--ash);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    font-style: italic;
+  }
+
+  .sabbat-node:hover text.node-date { fill: var(--parchment-dim); }
+
+  .wheel-centre-title {
+    font-family: 'Cinzel', serif;
+    font-size: 7px;
+    fill: var(--parchment-dim);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: 1px;
+  }
+
+  .season-label {
+    font-family: 'Cinzel', serif;
+    font-size: 4px;
+    fill: var(--amber);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: 0.8px;
+    opacity: 0.5;
+  }
+
+  /* ── PREVIEW MODAL ── */
+  #modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(13,11,9,0.92);
+    z-index: 100;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+
+  #modal-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--modal-bg);
+    border: 1px solid var(--modal-border);
+    max-width: 860px; width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  #modal-overlay.visible .modal { transform: translateY(0); }
+
+  .modal::before {
+    content: '';
+    display: block;
+    grid-column: 1 / -1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  }
+
+  .modal-header {
+    grid-column: 1 / -1;
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--modal-border);
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+
+  .modal-sabbat-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 400;
+    color: var(--parchment);
+    letter-spacing: 0.1em;
+  }
+
+  .modal-sabbat-date {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--amber);
+    margin-top: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-close {
+    background: none; border: none;
+    color: var(--ash); font-size: 1.5rem;
+    cursor: pointer; line-height: 1;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s;
+    font-family: 'Cinzel', serif;
+  }
+
+  .modal-close:hover { color: var(--parchment); }
+
+  .modal-image {
+    grid-column: 1;
+    padding: 1.5rem;
+    display: flex; align-items: flex-start;
+  }
+
+  .modal-image img { width: 100%; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
+
+  .modal-image-placeholder {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: #1a1612;
+    border: 1px solid var(--modal-border);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-image-placeholder span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  .modal-content {
+    grid-column: 2;
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    overflow-y: auto;
+  }
+
+  .modal-description {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--parchment-dim);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--modal-border);
+  }
+
+  .modal-text-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .modal-excerpt {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--parchment);
+  }
+
+  .modal-excerpt p + p { margin-top: 1em; }
+  .modal-excerpt em { color: var(--parchment-dim); }
+
+  .modal-footer {
+    grid-column: 1 / -1;
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--modal-border);
+    display: flex; gap: 1rem; justify-content: flex-end; align-items: center;
+  }
+
+  .modal-link {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+    cursor: pointer;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    padding: 0;
+  }
+
+  .modal-link:hover { border-bottom-color: var(--amber); }
+
+  .modal::-webkit-scrollbar,
+  .modal-content::-webkit-scrollbar { width: 4px; }
+  .modal::-webkit-scrollbar-track,
+  .modal-content::-webkit-scrollbar-track { background: var(--modal-bg); }
+  .modal::-webkit-scrollbar-thumb,
+  .modal-content::-webkit-scrollbar-thumb { background: var(--modal-border); }
+
+  /* ── READING MODAL ── */
+  #reading-overlay {
+    position: fixed; inset: 0;
+    background: var(--black);
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease;
+    overflow-y: auto;
+  }
+
+  #reading-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .reading-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 4rem 2rem 6rem;
+  }
+
+  .reading-back {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: none; border: none;
+    color: var(--ash);
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 3rem;
+    transition: color 0.2s;
+    padding: 0;
+  }
+
+  .reading-back:hover { color: var(--amber); }
+  .reading-back::before { content: '←'; font-family: serif; font-size: 1rem; }
+
+  .reading-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--modal-border);
+  }
+
+  .reading-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .reading-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--parchment);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .reading-date {
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--amber);
+    letter-spacing: 0.05em;
+  }
+
+  .reading-image {
+    width: 100%;
+    margin-bottom: 3rem;
+    border: 1px solid var(--modal-border);
+    opacity: 0.85;
+    display: block;
+  }
+
+  /* prose text */
+  .reading-body {
+    font-size: 1.1rem;
+    line-height: 1.95;
+    color: var(--parchment);
+  }
+
+  .reading-body p {
+    margin-bottom: 1.4em;
+  }
+
+  .reading-body p.section-break {
+    text-align: center;
+    color: var(--amber);
+    margin: 2.5em 0;
+    letter-spacing: 0.3em;
+  }
+
+  .reading-body em { color: var(--parchment-dim); }
+
+  /* poetry text — tighter, centred option */
+  .reading-body.poetry {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .reading-body.poetry p {
+    margin-bottom: 0.4em;
+  }
+
+  .reading-body.poetry p.stanza-break {
+    margin-bottom: 1.8em;
+  }
+
+  .reading-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+    margin: 3rem auto;
+  }
+
+  #reading-overlay::-webkit-scrollbar { width: 4px; }
+  #reading-overlay::-webkit-scrollbar-track { background: var(--black); }
+  #reading-overlay::-webkit-scrollbar-thumb { background: var(--modal-border); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .modal { grid-template-columns: 1fr; }
+    .modal-image { grid-column: 1; }
+    .modal-content { grid-column: 1; padding: 0 1.5rem 1.5rem; }
+    .modal-footer { grid-column: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── LANDING ── -->
+<div id="landing">
+  <div class="landing-bg"></div>
+  <div class="landing-content">
+    <p class="landing-eyebrow">A collection</p>
+    <h1 class="landing-title">
+      The Wheel
+      <span>of the year</span>
+    </h1>
+    <div class="landing-divider"></div>
+    <p class="landing-sub"><em>This is the cycle. This is the cost.</em></p>
+    <button class="enter-btn" onclick="enterWheel()">Enter</button>
+  </div>
+</div>
+
+<!-- ── WHEEL PAGE ── -->
+<div id="wheel-page">
+  <div class="wheel-bg"></div>
+  <p class="wheel-title">The Wheel</p>
+
+  <svg id="wheel-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="92" class="wheel-ring-outer"/>
+    <circle cx="100" cy="100" r="78" class="wheel-ring"/>
+    <circle cx="100" cy="100" r="24" class="wheel-ring" opacity="0.2"/>
+    <circle cx="100" cy="100" r="50" class="wheel-ring" opacity="0.1"/>
+    <line x1="100" y1="22" x2="100" y2="178" class="wheel-spoke"/>
+    <line x1="22" y1="100" x2="178" y2="100" class="wheel-spoke"/>
+    <line x1="44.9" y1="44.9" x2="155.1" y2="155.1" class="wheel-cross-spoke"/>
+    <line x1="155.1" y1="44.9" x2="44.9" y2="155.1" class="wheel-cross-spoke"/>
+    <text x="100" y="58" class="season-label" opacity="0.3">DARK HALF</text>
+    <text x="100" y="148" class="season-label" opacity="0.3">LIGHT HALF</text>
+    <text x="100" y="97" class="wheel-centre-title">THE</text>
+    <text x="100" y="104" class="wheel-centre-title">WHEEL</text>
+
+    <g class="sabbat-node" onclick="openModal('yule')">
+      <circle cx="100" cy="22" r="10"/>
+      <text x="100" y="21" class="node-name">YULE</text>
+      <text x="100" y="27" class="node-date">Winter Solstice</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('imbolc')">
+      <circle cx="145.1" cy="44.9" r="10"/>
+      <text x="145.1" y="43.9" class="node-name">IMBOLC</text>
+      <text x="145.1" y="49.9" class="node-date">~1 February</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('ostara')">
+      <circle cx="178" cy="100" r="10"/>
+      <text x="178" y="99" class="node-name">OSTARA</text>
+      <text x="178" y="105" class="node-date">Spring Equinox</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('beltane')">
+      <circle cx="155.1" cy="155.1" r="10"/>
+      <text x="155.1" y="154.1" class="node-name">BELTANE</text>
+      <text x="155.1" y="160.1" class="node-date">~1 May</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('litha')">
+      <circle cx="100" cy="178" r="10"/>
+      <text x="100" y="177" class="node-name">LITHA</text>
+      <text x="100" y="183" class="node-date">Summer Solstice</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('lughnasadh')">
+      <circle cx="44.9" cy="155.1" r="10"/>
+      <text x="44.9" y="154.1" class="node-name">LUGHNASADH</text>
+      <text x="44.9" y="160.1" class="node-date">~1 August</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('mabon')">
+      <circle cx="22" cy="100" r="10"/>
+      <text x="22" y="99" class="node-name">MABON</text>
+      <text x="22" y="105" class="node-date">Autumn Equinox</text>
+    </g>
+
+    <g class="sabbat-node" onclick="openModal('samhain')">
+      <circle cx="44.9" cy="44.9" r="10"/>
+      <text x="44.9" y="43.9" class="node-name">SAMHAIN</text>
+      <text x="44.9" y="49.9" class="node-date">~31 October</text>
+    </g>
+  </svg>
+
+  <p class="wheel-hint">Select a sabbat to read</p>
+</div>
+
+<!-- ── PREVIEW MODAL ── -->
+<div id="modal-overlay" onclick="closeModalOnOverlay(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <h2 class="modal-sabbat-name" id="modal-name">—</h2>
+        <p class="modal-sabbat-date" id="modal-date">—</p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-image">
+      <div class="modal-image-placeholder" id="modal-image-wrap">
+        <span>Image forthcoming</span>
+      </div>
+    </div>
+    <div class="modal-content">
+      <p class="modal-description" id="modal-description">—</p>
+      <p class="modal-text-label" id="modal-text-label">—</p>
+      <div class="modal-excerpt" id="modal-excerpt">—</div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-link" id="modal-read-btn" onclick="openReading()">Read the full piece</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── READING MODAL ── -->
+<div id="reading-overlay">
+  <div class="reading-inner">
+    <button class="reading-back" onclick="closeReading()">Back to the wheel</button>
+    <div class="reading-header">
+      <p class="reading-eyebrow" id="reading-eyebrow">—</p>
+      <h1 class="reading-title" id="reading-title">—</h1>
+      <p class="reading-date" id="reading-date">—</p>
+    </div>
+    <img id="reading-image" class="reading-image" src="" alt="" style="display:none"/>
+    <div class="reading-divider"></div>
+    <div class="reading-body" id="reading-body"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+// To add a full piece: populate the fullText property with <p> tags.
+// For poetry use class="stanza-break" on blank-line paragraphs.
+// Section breaks use <p class="section-break">— — —</p>
+
+const sabbats = {
+  yule: {
+    name: "Yule",
+    date: "Winter Solstice — c. 21 December",
+    eyebrow: "The Vignettes",
+    description: "The longest night. The year at its deepest dark, the fire kept low within walls of stone. The bright one returns, born again at the hinge of the year. We hold our breath alongside the sky.",
+    textLabel: "From the Vignettes",
+    excerpt: `<p>We kept the fires low on the longest night.</p>
+              <p>Not from neglect. Every hearth had been tended since dark fell, the wood stacked, the flames kept. But low was right for the longest night — the light held close rather than thrown outward, the village folding in on itself the way the year folded in on itself.</p>
+              <p><em>The light in the window changed quality just before dawn. Those of us who were still awake felt it before we saw it. A shift in the dark. Something released. Something taken up.</em></p>`,
+    imageSrc: "Yule2.png",
+    fullText: `
+      <p>We kept the fires low on the longest night.</p>
+      <p>Not from neglect. Every hearth had been tended since dark fell, the wood stacked, the flames kept. But low was right for the longest night — the light held close rather than thrown outward, the village folding in on itself the way the year folded in on itself, drawing everything toward the centre.</p>
+      <p>The animals were quiet in their byres. The dogs did not bark.</p>
+      <p>Snow had been threatening since noon and had not come. The sky held its breath. The stars were unusually bright above the frost-stiff fields, the cold of them a presence rather than an absence, something with weight.</p>
+      <p>On the far hill, the hall fire burned.</p>
+      <p>Not low. Steady and upright and visible from every corner of the village, the one fire that did not fold inward on this night, the one light held outward. We did not look at it directly. We had all lived here long enough to know that the hall fire on the longest night was not for looking at directly. It was for knowing was there. It was for the particular quality of warmth that comes not from a fire you can see but from a fire you know is burning.</p>
+      <p>Toward midnight the wind dropped completely.</p>
+      <p>We held our breath alongside the sky.</p>
+      <p>In the stone building on the hill's other side — not the hall, the lower place, the one with the single window that glowed orange through the dark — something was happening that had happened every year since before the oldest among us could remember, and would happen every year after the youngest had gone to their rest.</p>
+      <p>The light in the window changed quality just before dawn.</p>
+      <p>Those of us who were still awake felt it before we saw it. A shift in the dark. Something released. Something taken up.</p>
+      <p>By the time the first grey light came over the eastern fields the dogs were moving again, restless and glad, and the cattle in their byres had turned to face the doors.</p>
+      <p>The year's new fire was lit from the old.</p>
+      <p>We exhaled.</p>
+    `
+  },
+
+  imbolc: {
+    name: "Imbolc",
+    date: "~1 February — First Light",
+    eyebrow: "The Companion Prose",
+    description: "The first breath of the returning year. Brigid's flame lit in the darkness, snowdrops pushing through frozen ground. The light is thin but certain. We make crosses for our doors and tend the hearth against the cold that is not yet done.",
+    textLabel: "From the Companion Prose",
+    excerpt: `<p>From outside, Tom and David's front window was the warmest thing on the street.</p>
+              <p>The beeswax candles were everywhere — small points of amber light that had nothing of the electric about them, just the warm unsteady honey glow of something made from living things burning slowly and sweetly in the February dark.</p>
+              <p><em>Eight snowdrops, fully open, their small white heads bowed slightly under the weight of the afternoon's snow, their green stems impossibly delicate against the grey February flagstones.</em></p>`,
+    imageSrc: "",
+    fullText: `
+      <p>The snow had been falling since two.</p>
+      <p>Not dramatically — just steadily, the quiet determined kind that doesn't announce itself, that you notice has been happening for a while before you register that it's happening at all. It had settled on the window boxes of the terrace and on the doorsteps and on the rooftops in an even, patient layer, and it had muffled the street sounds the way snow always does, that particular February hush that makes a city briefly unfamiliar and briefly, grudgingly beautiful.</p>
+      <p>From outside, Tom and David's front window was the warmest thing on the street.</p>
+      <p>The beeswax candles were everywhere — on the windowsill, on the mantelpiece visible through the glass, small points of amber light that had nothing of the electric about them, just the warm unsteady honey glow of something made from living things burning slowly and sweetly in the February dark. The whole terrace frontage held that light the way a face holds an expression — quietly, without effort, entirely itself.</p>
+      <p>On the door, at eye height, the cross from last year.</p>
+      <p>It had been there since the previous Imbolc, fixed above the door with a piece of twine that had weathered through eleven months of rain and wind and the particular indignities of a city terrace. The straw had gone pale and dry and slightly twisted, the cross shape still legible but softened by the year, the way things soften when they've been doing their job for a long time. Snow had settled along its top arm in a thin white line.</p>
+      <p class="section-break">— — —</p>
+      <p>The chai came in mismatched mugs, the way everything in Tom and David's house came — not because they didn't have a matching set but because the mismatched ones had been accumulated over years and each one had a history and the matching set was in the back of the cupboard waiting for an occasion that never quite arrived.</p>
+      <p>Morgan wrapped both hands around the mug and felt February leave the fingers one by one.</p>
+      <p>"How long has this been on?" Lara asked, already halfway through hers.</p>
+      <p>"Since three," Tom said, with the satisfaction of a man who had planned this correctly.</p>
+      <p>"You started the chai at three," David said, "and then kept adding things to it for an hour and a half and now it's a different chai to the one you started."</p>
+      <p>"It's an evolved chai," Tom said. "It grew into itself."</p>
+      <p>"It's extraordinary," Karen said, and meant it.</p>
+      <p class="section-break">— — —</p>
+      <p>The yard was blue-dark now, the last of the February dusk gone, the snow still falling in small unhurried flakes that caught the kitchen light coming through the window and disappeared. The eight planter labels were dusted white again. The snowdrops in the Imbolc planter held their position — heads bowed, stems impossibly fine, the eight of them luminous in the low light in the way white things are luminous in snow.</p>
+      <p>David crouched by the planter and held the old cross for a moment, his hands around it the way you hold something you are about to let go of and want to hold correctly for the last time. Then he pressed it gently into the soil at the planter's edge, working it down until it was anchored, the pale weathered straw resting against the dark earth alongside the snowdrop stems.</p>
+      <p>The cross that had held the year gave itself back to the ground it had come from.</p>
+      <p>Tom put his hand briefly on David's shoulder.</p>
+      <p class="section-break">— — —</p>
+      <p>They stood in a rough circle around the table, crosses in hand, and for a moment the kitchen was simply quiet — six people in February holding something they had made with their own hands, something that would go above six different doors in six different parts of the city and hold six different thresholds through the turning year.</p>
+      <p>Tom spoke first.</p>
+      <p>"Thank you," he said. Simply, directly, without comedy or elaboration. "For the dark. For all of it. Thank you."</p>
+      <p>Karen held her star-cross to her chest briefly, her eyes closed. "For the ones who kept the fires," she said quietly. "The ones here and the ones not here. Thank you."</p>
+      <p>Lara's thumb moved over the centre of her cross. "For what held," she said. "Through all of it. Thank you."</p>
+      <p>David looked at his cross for a long moment. "For what grows in the dark without being asked to," he said. "For what comes back. Thank you."</p>
+      <p>Harry held his lopsided cross in both hands and looked at it with an expression that had the whole year in it. "For what holds across distance," he said. "For what doesn't need to be in the same room to be real. Thank you."</p>
+      <p>They all looked at Morgan.</p>
+      <p>"For the in-between," Morgan said. "For the neither and the both and the space between the dark and the light where the first things grow. Thank you."</p>
+      <p>The candles held their flames perfectly still.</p>
+      <p class="section-break">— — —</p>
+      <p>Morgan stood on the pavement for a moment after the others had gone, the way Morgan always stood at the end of things — at the threshold, at the edge, in the last moment before the ordinary resumed. The snow fell softly onto Morgan's shoulders and into Morgan's hair and onto the cross held in both hands, the straw pale against the February dark.</p>
+      <p>The street was quiet. The city was quiet. The snow went on doing its quiet work.</p>
+      <p>In the yard behind the terrace, alongside eight snowdrop heads bowed under their thin white covering, the old cross settled further into the dark soil, the year's work complete, the year's new work begun.</p>
+      <p>Morgan turned and walked into the snow.</p>
+      <p>Above six doors across the city, before the night was out, six crosses would be fixed in place — one nearly perfect, one lopsided with conviction, one competent and quiet, one a star by any reasonable measure, one made with the threshold figure's care, and one that was, whatever else it was, entirely and completely Tom.</p>
+      <p>The wheel had turned.</p>
+      <p>The light was returning.</p>
+      <p>It was enough.</p>
+    `
+  },
+
+  ostara: {
+    name: "Ostara",
+    date: "Spring Equinox — c. 20 March",
+    eyebrow: "The Vignettes",
+    description: "The light and the dark stand equal. The mantle passes without battle, without ceremony. One face of the king giving way to the next, as the year gives way to itself in turning. The field begins to say something with its colour.",
+    textLabel: "From the Vignettes",
+    excerpt: `<p>We knew before we saw it.</p>
+              <p>The light had been changing for weeks — arriving a little earlier each morning and staying a little later each evening, the difference too small to measure on any single day and unmistakable across the span of them.</p>
+              <p><em>At the field's crossing, we left what we had brought. We did not linger. We set it down and walked back and did not look behind us, because some things are witnessed by the leaving rather than the watching.</em></p>`,
+    imageSrc: "",
+    fullText: `
+      <p>We knew before we saw it.</p>
+      <p>The light had been changing for weeks — not dramatically, not all at once, but in the particular way it changed at this time of year, arriving a little earlier each morning and staying a little later each evening, the difference too small to measure on any single day and unmistakable across the span of them. The fields were beginning to say something with their colour. The birds had been saying it for a fortnight.</p>
+      <p>We had been watching the hall.</p>
+      <p>Not constantly. Not with urgency. Just the way you watch something you know is coming, the way you watch a sky that has weather in it, with the peripheral attention of people who have learned that the important things announce themselves quietly and only to those who are already paying attention.</p>
+      <p>The morning it happened the air was different before we opened our doors.</p>
+      <p>Softer. The frost still on the ground but the quality of the cold changed, something taken out of it, the edge gone. The mud at the field's edge had begun to consider moving. In the hedgerow the first green was showing, small and tentative and entirely certain.</p>
+      <p>We went about our work.</p>
+      <p>We did not go to the hall.</p>
+      <p>At the field's edge, where the two paths crossed, we left what we had brought — bread, a cup of something dark, the first green cutting from the hedgerow. We did not linger. We set it down and walked back and did not look behind us, because some things are witnessed by the leaving rather than the watching.</p>
+      <p>By midmorning the hall fire had changed.</p>
+      <p>Still burning. Always burning. But different — brighter, the smoke rising straighter, the light it threw across the hillside the particular gold of a thing that has come into its full authority and knows it.</p>
+      <p>In the lower field the ewes were loud with their lambs.</p>
+      <p>We did not speak of what had changed in the hall. We had no need to speak of it. We had felt the shift in the air before we opened our doors, had seen it in the hedgerow and the mud and the way the dogs were carrying themselves, and that was enough, that was the whole of it.</p>
+      <p>The mantle had moved.</p>
+      <p>The year had stepped into its green half.</p>
+      <p>We went back to our work and the work was lighter than it had been yesterday, though nothing about it had changed.</p>
+    `
+  },
+
+  beltane: {
+    name: "Beltane",
+    date: "~1 May — The Fire Festival",
+    eyebrow: "The Companion Prose",
+    description: "The year at its most alive. The hawthorn out, the fires lit, the world saying yes at full volume. The green king walks into the wood and the wood erupts. The tending done in full daylight, in full company, the sacred inside the noise of celebration.",
+    textLabel: "From the Companion Prose",
+    excerpt: `<p>The hawthorn was out.</p>
+              <p>Not the suggestion of it, not the first tentative white along the hedgerow, but fully, completely, recklessly out — every branch of the old tree at the garden's edge loaded with blossom until it bowed slightly under its own extravagance, and the smell of it moving across the grass in warm pulses.</p>
+              <p><em>The fire was already laid but not yet lit, a careful construction of seasoned oak in the centre of the lawn, patient and waiting.</em></p>`,
+    imageSrc: "",
+    fullText: `
+      <p>The hawthorn was out.</p>
+      <p>Not the suggestion of it, not the first tentative white along the hedgerow, but fully, completely, recklessly out — every branch of the old tree at the garden's edge loaded with blossom until it bowed slightly under its own extravagance, and the smell of it moving across the grass in warm pulses with every shift of the May evening air. Sweet and green and faintly animal. The smell that doesn't have a polite name.</p>
+      <p>The fire was already laid but not yet lit, a careful construction of seasoned oak in the centre of the lawn, patient and waiting. Around it the grass had been pressed flat by feet arriving all afternoon, and at the far end of the garden the maypole stood with its ribbons hanging loose in the still air — red and white and green and gold, catching the last of the five o'clock sun.</p>
+      <p>Somewhere in the apple tree, a blackbird was being completely unreasonable about it all.</p>
+      <p>The table was full. Bread and cheese and early strawberries and things in bowls covered with cloth against the bees, and at the centre of it the sun-plate, waiting. Bottles stood at the table's edge without ceremony — wine dark and wine pale, and a jug of lemonade sweating quietly in the warmth, a sprig of mint laid across its mouth.</p>
+      <p>At the garden's centre, older than anyone's memory of the garden, a stone sundial stood in the grass with moss in its lettering, patient and permanent.</p>
+      <p>The light was that particular gold that only happens in late April, low and warm and slightly disbelieving of itself, the kind of light that makes everything it touches look like it's been keeping a secret all winter and has finally decided to tell it.</p>
+      <p class="section-break">— — —</p>
+      <p>Harry lit it without announcement.</p>
+      <p>The dancing was still unwinding, the guitar still finding its way through something slow and evening-shaped, and he simply walked to the fire, crouched down at the base of the oak construction, and struck a match. He held it to the kindling with both hands cupped around the small flame the way you cup your hands around something you don't want the wind to take.</p>
+      <p>It caught on the second try.</p>
+      <p>He stayed crouched for a moment, watching the flame move from kindling to the first thin branches, making sure. Then he stood, put his hands in his pockets, and stepped back.</p>
+      <p>That was all.</p>
+      <p>Lara stood at Harry's shoulder and watched the fire take.</p>
+      <p>"There he is," she said quietly.</p>
+      <p>Harry nodded once.</p>
+      <p class="section-break">— — —</p>
+      <p>It started with Morgan sitting down.</p>
+      <p>Not at the fire's edge exactly, but close enough to feel the heat on one side and the cool May dark on the other. Someone had brought a low wooden stool from the kitchen and set it near the flames without being asked, as though the garden had anticipated the need. Morgan sat, and settled, and the guitar found a drone — a single open chord, low and warm, held without progression. Just a sound. Just the underneath of things.</p>
+      <p>David's hands found the tabletop again, softer this time. A heartbeat. Steady and unhurried.</p>
+      <p>The garden didn't go silent so much as it leaned in.</p>
+      <p><em>There was a man who walked into the woods in May.</em></p>
+      <p><em>He didn't know why. He'd told himself he was going for the air, for the exercise, for no particular reason at all. But his feet knew the way without being shown, and the path he followed was not the one he'd taken before, and the wood that closed around him was greener and louder and more alive than any wood he could remember, as though the year had been saving itself for this particular evening and had decided, without consulting him, that he was the reason.</em></p>
+      <p><em>The birds were loud with it. The bees were loud with it. The whole wood was loud with something that had no name except yes.</em></p>
+      <p>Morgan paused. The drum held the heartbeat. The guitar held the drone.</p>
+      <p><em>"Yes,"</em> Morgan said quietly.</p>
+      <p>The fire crackled once, sharp and clean, as though it agreed.</p>
+      <p class="section-break">— — —</p>
+      <p>And in the garden, the fire burned down to its last coal, a single point of deep red light in the May dark, steady and unhurried, burning long after it had any reason to.</p>
+      <p>The hawthorn gave off its sweetness to no one and everyone.</p>
+      <p>The sundial held the dark patiently, waiting for the sun it knew was coming.</p>
+      <p>The wheel had turned.</p>
+      <p>The year was open.</p>
+    `
+  },
+
+  litha: {
+    name: "Litha",
+    date: "Summer Solstice — c. 21 June",
+    eyebrow: "The Vignettes",
+    description: "The year at its peak, the dark already invisibly returning. We go out, not in. Fires on the hill, the brief night witnessed rather than slept through. The fullness held in the knowledge of what the fullness contains.",
+    textLabel: "From the Vignettes",
+    excerpt: `<p>We did not sleep the short night.</p>
+              <p>Not from anxiety — there was nothing anxious about it. We stayed awake because the short night asked to be witnessed, the way the long night asked to be held. Different vigils for different hinges of the year.</p>
+              <p><em>The hinge of the year turning on its point, the light at its peak, the dark at its furthest and beginning its return.</em></p>`,
+    imageSrc: "",
+    fullText: `
+      <p>We did not sleep the short night.</p>
+      <p>Not from anxiety — there was nothing anxious about it, there never had been. We stayed awake because the short night asked to be witnessed, the way the long night asked to be held. Different vigils for different hinges of the year. At Yule we folded inward and kept our fires low and waited. At Litha we went out.</p>
+      <p>The fires on the hill had been burning since before dark.</p>
+      <p>Not the hall fire — the open fires, the ones we built ourselves on the high ground above the village where you could see in every direction, where the sky was biggest, where the light at midsummer barely left before it began returning. We had carried the wood up in the afternoon, the long golden afternoon that went on and on, the sun refusing to drop, the air warm and loud with insects and the smell of the hay cut that week lying in the fields below.</p>
+      <p>We sat with the fires through the brief dark.</p>
+      <p>The hill was loud with us — voices and movement and the particular looseness of people awake at an hour the body doesn't expect wakefulness, a little giddy with the heat and the light and the knowledge of what the night was. Children who should have been sleeping were not sleeping and we let them stay because this was the night for staying.</p>
+      <p>On the far side of the hill, away from our fires, the other fire burned.</p>
+      <p>We felt it more than saw it. A brightness at the hill's edge that had a different quality to our own fires — older, steadier, the kind of light that knows what it is for. We did not go to it. We kept our own fires and let that one keep itself.</p>
+      <p>Just before the sky began to lighten in the northeast the hill went quiet.</p>
+      <p>Not silent — the insects were still loud, the fire still crackling, a child still awake somewhere at the hill's edge. But quiet underneath all of that. A held quality. The hinge of the year turning on its point, the light at its peak, the dark at its furthest and beginning its return.</p>
+      <p>We felt it the way we always felt it.</p>
+      <p>Not loss. Not yet. Just the knowledge of what the fullness contained.</p>
+      <p>The sky began to lighten.</p>
+      <p>We fed the fires one last time and watched the sun come up over the eastern fields, the same sun that had barely gone, the long gold of it lying across the hay and the rooftops and the faces of the people on the hill who had stayed awake to see it.</p>
+      <p>We came down off the hill with the sunrise at our backs.</p>
+      <p>The village smelled of woodsmoke and cut hay and the particular sweetness of a night spent outside in midsummer.</p>
+      <p>We went to our beds as the light was already climbing.</p>
+    `
+  },
+
+  lughnasadh: {
+    name: "Lughnasadh",
+    date: "~1 August — First Harvest",
+    eyebrow: "The Companion Prose",
+    description: "The summer's in the barn. The work of the sun is done. The first cut, the first acknowledgment that the light is leaving — not with grief but with the willingness the cycle requires. The bread baked by hand. The fire kept. The cost borne together.",
+    textLabel: "From the Companion Prose",
+    excerpt: `<p>The incense had been burning since noon.</p>
+              <p>Not heavily — Harry knew the difference between a room that breathed and a room that choked — but steadily, the small braziers on the altar tended through the afternoon until the smell had worked its way into every corner of the flat.</p>
+              <p><em>"The summer's in the barn," Harry said softly. Not a line from any script. Just the truth of it, said plainly.</em></p>`,
+    imageSrc: "",
+    fullText: `
+      <p>The incense had been burning since noon.</p>
+      <p>Not heavily — Harry knew the difference between a room that breathed and a room that choked — but steadily, the small braziers on the altar tended through the afternoon until the smell had worked its way into every corner of the flat, into the curtains and the books on the shelves and the dried herbs hanging in the kitchen doorway. Mugwort and meadowsweet and something underneath them both that was just August, just the particular smell of a summer that knew it was ending.</p>
+      <p>The flat was small and warm and entirely itself. Low ceilings. Shelves crowded with things that had been kept because they mattered. A coat on the hook by the door that wasn't Harry's.</p>
+      <p>The altar was in the corner where it always was. At its centre the space he had left without quite deciding to leave it, a bare patch of cloth the size of two hands, waiting for what the evening would bring.</p>
+      <p>On the shelf above it, a mug with a chip in the handle that Harry never used because it wasn't his to use.</p>
+      <p>Harry sat in the chair nearest the altar and waited for his people to arrive.</p>
+      <p class="section-break">— — —</p>
+      <p>He thought about the grandfather without meaning to. Not sadly exactly — or not only sadly. The man had been old and pagan and had died in his own bed in the right season with his family around him and his gods in the room. Harry had met him twice. Large hands. A laugh that arrived before the joke did. The kind of person who made you feel that the ground under your feet was more solid than you'd previously given it credit for.</p>
+      <p>He heard the gate. He didn't get up. He just turned his head toward the door and listened to the familiar sound of people who had keys using them.</p>
+      <p>"Harry," Lara said, from the doorway.</p>
+      <p>Not a question. Just his name, said the way she said it when she knew what a room had been doing before she arrived.</p>
+      <p>"In here," he said.</p>
+      <p class="section-break">— — —</p>
+      <p>It was Morgan whose hands paused first.</p>
+      <p>Morgan's hands simply paused on the fresh length of straw, and then began. Differently this time. More slowly. With the particular attention reserved for things that mattered beyond the personal.</p>
+      <p>The table went quieter without going silent.</p>
+      <p>Morgan folded and crossed and bound, unhurried, and when the shape needed something more held it out across the table without looking up.</p>
+      <p>Lara took it. Added her part. Passed it left.</p>
+      <p>Karen received it with both hands, the way you receive something fragile, and worked in silence for a moment, her head bent, and passed it on.</p>
+      <p>Tom took it and his face was entirely unguarded now, the warmth and the comedy set completely aside. He added what he could and held it out to David.</p>
+      <p>David took it with both hands and worked carefully and passed it to Harry.</p>
+      <p>Harry took it. The flat was very quiet.</p>
+      <p>He worked slowly. His hands knew what they were doing even if he hadn't known five minutes ago that they were going to do it. He folded the last piece into place and bound it with a length of the red twine and held the finished dolly in both palms for a moment.</p>
+      <p>Harry moved Morgan's jar of blackberry and sloe gently to one side and set the dolly in the empty space on the altar cloth.</p>
+      <p>It fit exactly, the way things fit when they were always meant to go somewhere and have simply been waiting for the right hands to put them there.</p>
+      <p class="section-break">— — —</p>
+      <p>Tom sat up straight. "You got it fixed," he said.</p>
+      <p>"July," Harry said, crouching at the grate.</p>
+      <p>Tom looked at the fireplace. Then at the altar. Then at Harry's back, crouched over the kindling with a match in his hand.</p>
+      <p>"July," Tom repeated quietly, to himself, understanding settling over his face like the warmth that was about to come off the hearthstone.</p>
+      <p>Harry struck the match.</p>
+      <p class="section-break">— — —</p>
+      <p>The five of them gathered around the hearthstone and Harry held a lit taper to the contents and the dollies caught slowly, the straw darkening before the flame took it, and then all at once they were burning — a clean bright flare that lasted only a moment before settling into a steady small fire in the iron belly of the cauldron.</p>
+      <p>"The summer's in the barn," Harry said softly. Not a line from any script. Just the truth of it, said plainly, the way Harry said things when he meant them entirely.</p>
+      <p>"The work of the sun is done," Lara answered.</p>
+      <p>The cauldron burned down to ash.</p>
+      <p>The grandfather's dolly stood on the altar cloth in the firelight, patient and unhurried, holding its place until Imbolc.</p>
+      <p class="section-break">— — —</p>
+      <p>"He'll be home for the equinox," Harry said quietly. "Marcus."</p>
+      <p>Morgan looked up from the fire.</p>
+      <p>"The whole year," Lara said softly. Not a question.</p>
+      <p>"The whole year," Harry said. "They knew at Samhain. The family wanted — they wanted every one. Every festival. All of them together."</p>
+      <p>"Good," Karen said quietly. "That's exactly right."</p>
+      <p>The grandfather's dolly would wait on the altar through the long dark, holding what it held, until Imbolc came and the ground softened and Harry's hands and five other pairs of hands returned it to the earth it had come from.</p>
+      <p>Until then the fire would keep.</p>
+      <p>Until then they would keep it.</p>
+      <p>The wheel had turned. The cost was known.</p>
+      <p>This is the cycle. This is the cost.</p>
+    `
+  },
+
+  mabon: {
+    name: "Mabon",
+    date: "Autumn Equinox — c. 22 September",
+    eyebrow: "The Vignettes",
+    description: "The light and the dark stand equal again. The apples cut to show the stars at their cores. The last sheaf bound and left at the field's crossing. The year turning its face toward the dark, willingly, as it always has.",
+    textLabel: "From the Vignettes",
+    excerpt: `<p>We noticed it in the quality of the morning light first.</p>
+              <p>The light itself had changed quality overnight, the gold of it deeper and more amber, the shadows longer even at noon, the whole world looking slightly more like a painting of itself than it had the day before.</p>
+              <p><em>The light stood equal with the dark for one day. We felt it in our bodies — not as an abstraction, not as a calculation, but as a physical fact.</em></p>`,
+    imageSrc: "Mabon.png",
+    fullText: `
+      <p>We noticed it in the quality of the morning light first.</p>
+      <p>Not the length of it — we had been watching the days shorten since Litha, the evenings arriving earlier, the mornings taking longer to fully commit. That had been gradual, measurable, the kind of change you track. This was different. The light itself had changed quality overnight, the gold of it deeper and more amber, the shadows longer even at noon, the whole world looking slightly more like a painting of itself than it had the day before.</p>
+      <p>The apples were ready.</p>
+      <p>We had known they were coming — had watched them swell and redden through August, had felt the weight of them in the branches when we passed beneath the trees. But the morning of the equinox they were simply ready in a way they had not been the morning before, the way things are ready at the right moment as opposed to merely ripe.</p>
+      <p>We cut them open.</p>
+      <p>The stars at their cores. We always checked for the stars, had always checked, would always check. The five-pointed dark at the centre of each half, the seeds in their chambers, the whole year's work held in the geometry of a piece of fruit. We set the halves out on the low wall by the field and did not go back for them.</p>
+      <p>Someone else's breakfast.</p>
+      <p>We brought in what needed bringing in.</p>
+      <p>Not urgently. Not with grief. The urgency was past and the grief, such as it was, was the grief of something known and accepted and prepared for, the way you prepare for winter not because winter is wrong but because winter is and the preparation is the right response to the rightness of it.</p>
+      <p>At the field's crossing we left the last sheaf, bound with straw, the head of it bowed toward the earth. We left it and did not look back. By morning it would be gone and we would not speak of where it had gone because we had never spoken of where it went and our grandmothers had never spoken of it and that silence was itself part of the keeping.</p>
+      <p>The light stood equal with the dark for one day.</p>
+      <p>We felt it in our bodies the way we always felt it — not as an abstraction, not as a calculation, but as a physical fact, the way you feel a balance point, the moment of perfect poise before the tipping.</p>
+      <p>Then the dark began to take its portion back.</p>
+      <p>We watched the sun go down behind the western hill, deeper into the year's amber, and we went inside, and we built our fires up rather than letting them down, the first evening of the dark half requiring a different kind of fire to the last evening of the light.</p>
+      <p>The dogs came in with us.</p>
+      <p>The year turned its face toward the dark.</p>
+      <p>We set another log on and waited for Samhain.</p>
+    `
+  },
+
+  samhain: {
+    name: "Samhain",
+    date: "~31 October — The Dark Festival",
+    eyebrow: "The Companion Prose",
+    description: "The year's threshold. The veil thin, the dead close, the Hunt riding the night sky. The work of the cross-quarter done in firelight and candlelight, in a circle on the floor, the outermost ring of the wood just beyond the window glass.",
+    textLabel: "From the Companion Prose",
+    excerpt: `<p>It was half-past midnight on Samhain.</p>
+              <p>We were sitting in a circle on Lara's living room rug, our knees nearly touching because the room wasn't built for gatherings.</p>
+              <p><em>And then. The candle in the pasta jar stopped moving. A thin column of light, perfectly vertical, burning without tremor in a room that hadn't changed, in a draft that hadn't stopped.</em></p>`,
+    imageSrc: "Samhain.png",
+    fullText: `
+      <p>The radiator in the corner was knocking — three sharp clicks and a long, wet hiss, regular as a faulty clock. Four floors down, the night buses were still cutting through the rain on the ring road, their low, diesel rumble vibrating up through the concrete foundations of the block and into the soles of my bare feet. It was half-past midnight on Samhain.</p>
+      <p>We were sitting in a circle on Lara's living room rug, our knees nearly touching because the room wasn't built for gatherings.</p>
+      <p>To my left, Lara and Karen sat shoulder to shoulder, Karen's fingers hooked lightly into the belt-loop of Lara's jeans, their breathing synchronous and quiet. Across from them were Tom and David, their heavy winter coats still draped over the back of the sofa behind them, smelling of cold wool and wet tarmac. And to my right sat Harry, his hands tucked into his sleeves, his eyes fixed on the floorboards. His partner, Marcus, was three hundred miles south in a terrace house in Bristol, probably sleeping under two duvets, completely unaware of the hour or the weight of the air in this room.</p>
+      <p>And then me. Morgan. I sat between Harry and David, cross-legged, my spine curved against the draft coming off the balcony door.</p>
+      <p>People like me spend a lot of time explaining what we are, balancing on the thin edge between one word and another. But on a night like tonight, the middle-ground feels less like a modern argument and more like an old inheritance. If the year has a threshold that is neither summer nor winter, then it makes sense that the people tending it should have boundaries of their own that blur a little around the edges.</p>
+      <p>In the center of our six pairs of feet lay the altar.</p>
+      <p>It was a collection of things we'd carried in our pockets or scraped together from the shelves of the charity shop down the road. There was a flat greystone from a beach in Wales that David had kept in his sock drawer; a grey gull feather Lara had found in the gutter outside the garage; a chipped ceramic cup Tom had brought, filled with cheap red wine; and a single beeswax candle stuck down into a glass jar that still had the faint, sweet smell of supermarket tomato sauce around the rim.</p>
+      <p class="section-break">— — —</p>
+      <p>Lara had cleared the coffee table before we arrived. She'd laid out the altar objects herself, each one placed with the quiet, unhurried care of someone who had done this enough times that the doing had become its own kind of prayer.</p>
+      <p>We settled into the circle without being directed. Four years of Samhains will do that; your body remembers where it belongs before your mind has finished arriving.</p>
+      <p>"Right," Lara said, sitting back on her heels. "Quarters. North is — " she tilted her head toward the kitchen wall, " — roughly that way, I think. The compass app disagreed with itself last year and I've stopped trusting it."</p>
+      <p>"North is toward the fridge," Tom said. "I've decided. The fridge is north. It's cold, it's where the food lives, it makes sense."</p>
+      <p>"The fridge is north," David confirmed, with the solemn gravity of a man ratifying a treaty.</p>
+      <p>When it came to closing the circle, they all looked at me. They always did. I was the edge of things. The in-between. It made a kind of sense that I should be the one to mark where the edge was.</p>
+      <p>I spoke the closing words. I knew them well enough by now that I didn't have to think about them, which meant I could feel the room while I said them — feel the quality of the air shifting, the way a space will shift when you draw a line around it and mean it.</p>
+      <p>And then.</p>
+      <p>The candle in the pasta jar stopped moving.</p>
+      <p>It had been guttering in the draft from the balcony door since Lara first lit it — a small, restless flutter, the flame leaning and recovering, leaning and recovering. Now it stood completely still. A thin column of light, perfectly vertical, burning without tremor in a room that hadn't changed, in a draft that hadn't stopped.</p>
+      <p>I felt it before I understood it. Something settling into the room the way a hand settles onto a shoulder — quiet, deliberate, without announcement. A weight that was not heavy. A presence that was not large but was very, very old.</p>
+      <p>I didn't say anything. I let my hands rest open on my knees.</p>
+      <p>Lara was the last to feel it. I watched the moment it reached her — her shoulders dropped, not with tiredness but with recognition, the way you drop your shoulders when you walk through your own front door. She looked across the altar at me, and I looked back at her, and neither of us spoke.</p>
+      <p>The work could begin.</p>
+      <p class="section-break">— — —</p>
+      <p>"Is it time?" Karen whispered.</p>
+      <p>"The dark has been complete since five," I told her. "The streets are as quiet as they're going to get. It's time."</p>
+      <p>Lara didn't hesitate. She set her thumbs deep into the crust and pulled, splitting the white supermarket cob down the center with a clean, practiced motion. The sound of the loaf tearing went through the room like a dead-bolt sliding home.</p>
+      <p>"To the Goddess," Lara said. "From the King. The harvest is in the barn, Mother. The work of the sun is done."</p>
+      <p>Harry took the bread from her palm without a single beat of delay.</p>
+      <p>"My Lord," Harry answered. "The earth receives it. The ground remembers what the sun gave."</p>
+      <p class="section-break">— — —</p>
+      <p>Harry passed six hazelnuts around the circle. Each of us took one, holding the smooth hard shell in our palms, letting the warmth of our skin take the chill off the wood.</p>
+      <p>Lara set the cast-iron pan onto the portable gas ring and clicked the ignition. The blue flames hissed into life. She looked up at me, and I moved without being asked, settling onto my knees beside the ring and wrapping both hands around the pan handle. The iron was cold for a moment, then not.</p>
+      <p>"This is for Marcus," Harry said softly, placing his nut on the left side of the pan. "To see if the distance holds."</p>
+      <p>I kept the heat steady. That was all.</p>
+      <p>Then, pop.</p>
+      <p>Tom's nut cracked clean down the centre and jumped two inches into the air. We all laughed.</p>
+      <p>But Harry's nut stayed whole. It sat in the iron turning a deep rich brown, its oil sizzling quietly against the metal, and I felt the steadiness of it through my hands where they held the pan — the same steadiness the room had held since the candle stopped moving, the same patient, unhurried weight.</p>
+      <p>Harry let out a long slow breath, his shoulders dropping.</p>
+      <p>"It holds," Karen said, nudging him with her slipper. "The distance doesn't mean a thing to the root."</p>
+      <p class="section-break">— — —</p>
+      <p>I reached for the central sauce-jar altar and tilted the hot glass until the pooled white beeswax began to run. I poured it slowly into the chipped ceramic cup of cold red wine. The wax hit the surface with a soft hiss, freezing instantly into pale twisting ribbons against the dark liquid. The others leaned in, our six heads close under the salt-lamp glow.</p>
+      <p>Harry spoke first.</p>
+      <p>"The spiral," he said quietly. "The path downward."</p>
+      <p>I looked at where the coil narrowed to its single anchored point against the edge of the clay.</p>
+      <p>"And the holding," I said.</p>
+      <p>Nobody added anything. Nobody needed to.</p>
+      <p class="section-break">— — —</p>
+      <p>We'd planned for this. Every Samhain for four years, Lara's living room became somewhere else entirely.</p>
+      <p>Harry reached under the sofa and produced the tissue-paper campfire. He clicked the switch and it bloomed orange in the middle of the nest, throwing its theatrical amber light across the five carved pumpkins lined up beneath the windowsill, their grinning faces tilting shadows up the plasterboard walls.</p>
+      <p>Lara clicked the television on and muted it. The Charmed title sequence flickered to life, familiar as a hymn.</p>
+      <p>We crawled into the nest. The room settled around us — pink salt-lamp, silent television, the steady orange of the tissue-paper fire, and underneath all of it that same quality of air the candle had found when it stopped moving.</p>
+      <p>"Harry," Tom's voice came muffled from somewhere under a pillow. "If you steal the heavy duvet again this year I'm throwing your hazelnuts out the window."</p>
+      <p>"I have excellent blanket discipline, Tom, don't slander me," Harry mumbled back.</p>
+      <p>I lay between Harry and David and watched the tealights burn down in their saucers alongside the five grinning pumpkins. We were inside, keeping the fire lit, waiting out the longest dark together. The threshold was still open. The work was still being done.</p>
+      <p>The wheel would turn when it turned.</p>
+      <p>Until then, we kept watch.</p>
+    `
+  }
+};
+
+let currentSabbat = null;
+
+// ── NAVIGATION ──
+function enterWheel() {
+  document.getElementById('landing').classList.add('hidden');
+  setTimeout(() => {
+    document.getElementById('wheel-page').classList.add('visible');
+  }, 400);
+}
+
+// ── PREVIEW MODAL ──
+function openModal(key) {
+  const data = sabbats[key];
+  if (!data) return;
+  currentSabbat = key;
+
+  document.querySelectorAll('.sabbat-node circle').forEach(c => {
+    c.style.fill = '';
+    c.style.stroke = '';
+  });
+
+  document.getElementById('modal-name').textContent = data.name;
+  document.getElementById('modal-date').textContent = data.date;
+  document.getElementById('modal-description').textContent = data.description;
+  document.getElementById('modal-text-label').textContent = data.textLabel;
+  document.getElementById('modal-excerpt').innerHTML = data.excerpt;
+
+  const imgWrap = document.getElementById('modal-image-wrap');
+  if (data.imageSrc) {
+    imgWrap.outerHTML = `<div class="modal-image" style="padding:1.5rem;display:flex;align-items:flex-start;"><img src="${data.imageSrc}" alt="${data.name}" style="width:100%;height:auto;display:block;border:1px solid var(--modal-border);opacity:0.9;" onerror="this.style.display='none'"/></div>`;
+  } else {
+    const wrap = document.getElementById('modal-image-wrap') || imgWrap;
+    if (wrap) wrap.innerHTML = `<span>Image forthcoming</span>`;
+  }
+
+  document.getElementById('modal-overlay').classList.add('visible');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('visible');
+}
+
+function closeModalOnOverlay(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+// ── READING MODAL ──
+function openReading() {
+  const data = sabbats[currentSabbat];
+  if (!data) return;
+
+  document.getElementById('reading-eyebrow').textContent = data.eyebrow;
+  document.getElementById('reading-title').textContent = data.name;
+  document.getElementById('reading-date').textContent = data.date;
+
+  const img = document.getElementById('reading-image');
+  if (data.imageSrc) {
+    img.src = data.imageSrc;
+    img.alt = data.name;
+    img.style.display = 'block';
+  } else {
+    img.style.display = 'none';
+  }
+
+  document.getElementById('reading-body').innerHTML = data.fullText;
+  document.getElementById('reading-overlay').classList.add('visible');
+  document.getElementById('reading-overlay').scrollTop = 0;
+}
+
+function closeReading() {
+  document.getElementById('reading-overlay').classList.remove('visible');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('reading-overlay').classList.contains('visible')) {
+      closeReading();
+    } else {
+      closeModal();
+    }
+  }
+});
+</script>
+</body>
+</html>

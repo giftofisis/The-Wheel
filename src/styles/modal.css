@@ -1,0 +1,161 @@
+/* ── PREVIEW MODAL ── */
+  #modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(13,11,9,0.92);
+    z-index: 100;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s ease;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+
+  #modal-overlay.visible { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--modal-bg);
+    border: 1px solid var(--modal-border);
+    max-width: 860px; width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  #modal-overlay.visible .modal { transform: translateY(0); }
+
+  .modal::before {
+    content: '';
+    display: block;
+    grid-column: 1 / -1;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--amber), transparent);
+  }
+
+  .modal-header {
+    grid-column: 1 / -1;
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--modal-border);
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+
+  .modal-sabbat-name {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 400;
+    color: var(--parchment);
+    letter-spacing: 0.1em;
+  }
+
+  .modal-sabbat-date {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--amber);
+    margin-top: 0.3rem;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-close {
+    background: none; border: none;
+    color: var(--ash); font-size: 1.5rem;
+    cursor: pointer; line-height: 1;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s;
+    font-family: 'Cinzel', serif;
+  }
+
+  .modal-close:hover { color: var(--parchment); }
+
+  .modal-image {
+    grid-column: 1;
+    padding: 1.5rem;
+    display: flex; align-items: flex-start;
+  }
+
+  .modal-image img { width: 100%; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
+
+  .modal-image-placeholder {
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: #1a1612;
+    border: 1px solid var(--modal-border);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .modal-image-placeholder span {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  .modal-content {
+    grid-column: 2;
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    overflow-y: auto;
+  }
+
+  .modal-description {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--parchment-dim);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--modal-border);
+  }
+
+  .modal-text-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+
+  .modal-excerpt {
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--parchment);
+  }
+
+  .modal-excerpt p + p { margin-top: 1em; }
+  .modal-excerpt em { color: var(--parchment-dim); }
+
+  .modal-footer {
+    grid-column: 1 / -1;
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--modal-border);
+    display: flex; gap: 1rem; justify-content: flex-end; align-items: center;
+  }
+
+  .modal-link {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--amber);
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+    cursor: pointer;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    padding: 0;
+  }
+
+  .modal-link:hover { border-bottom-color: var(--amber); }
+
+  .modal::-webkit-scrollbar,
+  .modal-content::-webkit-scrollbar { width: 4px; }
+  .modal::-webkit-scrollbar-track,
+  .modal-content::-webkit-scrollbar-track { background: var(--modal-bg); }
+  .modal::-webkit-scrollbar-thumb,
+  .modal-content::-webkit-scrollbar-thumb { background: var(--modal-border); }
