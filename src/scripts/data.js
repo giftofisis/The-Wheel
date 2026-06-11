@@ -7,7 +7,7 @@ export const sabbats = {
     "textLabel": "From the centre",
     "excerpt": "<p>This piece belongs at the centre of the wheel, where the turning begins to mean something more than simple motion.</p>",
     "textSrc": "./src/texts/cycle.html",
-    "imageSrc": "./assets/images/thecycle.png"
+    "imageSrc": "./assets/images/TheCycle.png"
   },
   "crossing": {
     "name": "The Crossing",
@@ -17,7 +17,7 @@ export const sabbats = {
     "textLabel": "From the centre",
     "excerpt": "<p>This piece sits in the middle of the wheel, at the point where one state gives way to the next.</p>",
     "textSrc": "./src/texts/crossing.html",
-    "imageSrc": "./assets/images/thecrossing.png"
+    "imageSrc": "./assets/images/TheCrossing.png"
   },
   "ending": {
     "name": "The Ending",
