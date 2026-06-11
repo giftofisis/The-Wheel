@@ -7,550 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --black: #0d0b09;
-    --parchment: #e8dcc8;
-    --parchment-dim: #a89880;
-    --amber: #c17f3a;
-    --amber-bright: #f0a855;
-    --forest: #2a3d2e;
-    --ash: #6b6560;
-    --modal-bg: #141210;
-    --modal-border: #3a3028;
-  }
-
-  html, body {
-    width: 100%; height: 100%;
-    background: var(--black);
-    color: var(--parchment);
-    font-family: 'EB Garamond', serif;
-    overflow: hidden;
-  }
-
-  /* ── LANDING ── */
-  #landing {
-    position: fixed; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    z-index: 10;
-    transition: opacity 1.2s ease;
-  }
-
-  #landing.hidden { opacity: 0; pointer-events: none; }
-
-  .landing-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse at center, rgba(13,11,9,0.3) 0%, rgba(13,11,9,0.85) 60%, rgba(13,11,9,0.98) 100%),
-      repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(193,127,58,0.015) 2px, rgba(193,127,58,0.015) 4px
-      );
-    background-color: #1a1208;
-  }
-
-  .landing-bg::after {
-    content: '';
-    position: absolute; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    opacity: 0.4;
-    pointer-events: none;
-  }
-
-  .landing-content {
-    position: relative; z-index: 1;
-    text-align: center;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 2rem;
-  }
-
-  .landing-eyebrow {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.4em;
-    color: var(--amber);
-    text-transform: uppercase;
-    opacity: 0;
-    animation: fadeUp 1.2s ease 0.3s forwards;
-  }
-
-  .landing-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-weight: 400;
-    color: var(--parchment);
-    letter-spacing: 0.08em;
-    line-height: 1.1;
-    opacity: 0;
-    animation: fadeUp 1.2s ease 0.6s forwards;
-  }
-
-  .landing-title span {
-    display: block;
-    font-size: 0.4em;
-    letter-spacing: 0.3em;
-    color: var(--parchment-dim);
-    margin-top: 0.5rem;
-  }
-
-  .landing-divider {
-    width: 120px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--amber), transparent);
-    opacity: 0;
-    animation: fadeUp 1.2s ease 0.9s forwards;
-  }
-
-  .landing-sub {
-    font-size: 1.1rem;
-    font-style: italic;
-    color: var(--parchment-dim);
-    max-width: 40ch;
-    line-height: 1.7;
-    opacity: 0;
-    animation: fadeUp 1.2s ease 1.1s forwards;
-  }
-
-  .enter-btn {
-    margin-top: 1rem;
-    background: none;
-    border: 1px solid var(--amber);
-    color: var(--amber);
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    padding: 0.9rem 2.5rem;
-    cursor: pointer;
-    transition: background 0.3s, color 0.3s;
-    opacity: 0;
-    animation: fadeUp 1.2s ease 1.4s forwards;
-  }
-
-  .enter-btn:hover { background: var(--amber); color: var(--black); }
-
-  /* ── WHEEL PAGE ── */
-  #wheel-page {
-    position: fixed; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 1.2s ease;
-  }
-
-  #wheel-page.visible { opacity: 1; pointer-events: all; }
-
-  .wheel-bg {
-    position: absolute; inset: 0;
-    background: var(--black);
-  }
-
-  .wheel-bg::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, #1c1508 0%, #0d0b09 70%);
-  }
-
-  .wheel-title {
-    position: absolute; top: 2rem;
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.4em;
-    color: var(--amber);
-    text-transform: uppercase;
-  }
-
-  .wheel-hint {
-    position: absolute; bottom: 2rem;
-    font-size: 0.85rem;
-    font-style: italic;
-    color: var(--ash);
-    letter-spacing: 0.05em;
-  }
-
-  #wheel-svg {
-    position: relative; z-index: 1;
-    width: min(85vw, 85vh);
-    height: min(85vw, 85vh);
-  }
-
-  .wheel-ring { fill: none; stroke: var(--ash); stroke-width: 0.5; opacity: 0.3; }
-  .wheel-ring-outer { fill: none; stroke: var(--amber); stroke-width: 0.8; opacity: 0.2; }
-  .wheel-spoke { stroke: var(--ash); stroke-width: 0.4; opacity: 0.2; }
-  .wheel-cross-spoke { stroke: var(--ash); stroke-width: 0.3; opacity: 0.15; stroke-dasharray: 2 3; }
-
-  .sabbat-node { cursor: pointer; transition: all 0.2s ease; }
-
-  .sabbat-node circle {
-    fill: var(--black);
-    stroke: var(--ash);
-    stroke-width: 0.8;
-    transition: all 0.3s ease;
-  }
-
-  .sabbat-node:hover circle,
-  .sabbat-node.active circle {
-    fill: rgba(193,127,58,0.15);
-    stroke: var(--amber-bright);
-    stroke-width: 1.2;
-    filter: drop-shadow(0 0 4px rgba(240,168,85,0.5));
-  }
-
-  .sabbat-node circle.moon-shell {
-    fill: rgba(193,127,58,0.08);
-    stroke: var(--ash);
-    stroke-width: 0.7;
-  }
-
-  .sabbat-node circle.moon-phase {
-    fill: var(--parchment-dim);
-  }
-
-  .sabbat-node circle.moon-shadow {
-    fill: var(--black);
-  }
-
-  .sabbat-node text.node-name {
-    font-family: 'Cinzel', serif;
-    font-size: 5.5px;
-    fill: var(--parchment-dim);
-    text-anchor: middle;
-    dominant-baseline: middle;
-    pointer-events: none;
-    transition: fill 0.3s ease;
-    letter-spacing: 0.5px;
-  }
-
-  .sabbat-node:hover text.node-name,
-  .sabbat-node.active text.node-name { fill: var(--amber-bright); }
-
-  .sabbat-node text.node-date {
-    font-family: 'EB Garamond', serif;
-    font-size: 4px;
-    fill: var(--ash);
-    text-anchor: middle;
-    dominant-baseline: middle;
-    pointer-events: none;
-    font-style: italic;
-  }
-
-  .sabbat-node:hover text.node-date { fill: var(--parchment-dim); }
-
-  .wheel-centre-title {
-    font-family: 'Cinzel', serif;
-    font-size: 7px;
-    fill: var(--parchment-dim);
-    text-anchor: middle;
-    dominant-baseline: middle;
-    letter-spacing: 1px;
-  }
-
-  .season-label {
-    font-family: 'Cinzel', serif;
-    font-size: 4px;
-    fill: var(--amber);
-    text-anchor: middle;
-    dominant-baseline: middle;
-    letter-spacing: 0.8px;
-    opacity: 0.5;
-  }
-
-  /* ── PREVIEW MODAL ── */
-  #modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(13,11,9,0.92);
-    z-index: 100;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.4s ease;
-    display: flex; align-items: center; justify-content: center;
-    padding: 2rem;
-  }
-
-  #modal-overlay.visible { opacity: 1; pointer-events: all; }
-
-  .modal {
-    background: var(--modal-bg);
-    border: 1px solid var(--modal-border);
-    max-width: 860px; width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    transition: transform 0.4s ease;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr auto;
-  }
-
-  #modal-overlay.visible .modal { transform: translateY(0); }
-
-  .modal::before {
-    content: '';
-    display: block;
-    grid-column: 1 / -1;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--amber), transparent);
-  }
-
-  .modal-header {
-    grid-column: 1 / -1;
-    padding: 2rem 2rem 1rem;
-    border-bottom: 1px solid var(--modal-border);
-    display: flex; justify-content: space-between; align-items: flex-start;
-  }
-
-  .modal-sabbat-name {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
-    font-weight: 400;
-    color: var(--parchment);
-    letter-spacing: 0.1em;
-  }
-
-  .modal-sabbat-date {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--amber);
-    margin-top: 0.3rem;
-    letter-spacing: 0.05em;
-  }
-
-  .modal-close {
-    background: none; border: none;
-    color: var(--ash); font-size: 1.5rem;
-    cursor: pointer; line-height: 1;
-    padding: 0.2rem 0.5rem;
-    transition: color 0.2s;
-    font-family: 'Cinzel', serif;
-  }
-
-  .modal-close:hover { color: var(--parchment); }
-
-  .modal-image {
-    grid-column: 1;
-    padding: 1.5rem;
-    display: flex; align-items: flex-start;
-  }
-
-  .modal-image img { width: auto; max-width: 100%; max-height: 50vh; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
-
-  .modal-image-placeholder {
-    width: 100%;
-    aspect-ratio: 16/10;
-    background: #1a1612;
-    border: 1px solid var(--modal-border);
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .modal-image-placeholder span {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    color: var(--ash);
-    text-transform: uppercase;
-  }
-
-  .modal-content {
-    grid-column: 2;
-    padding: 1.5rem 1.5rem 1.5rem 0;
-    overflow-y: auto;
-  }
-
-  .modal-description {
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: var(--parchment-dim);
-    margin-bottom: 1.5rem;
-    font-style: italic;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--modal-border);
-  }
-
-  .modal-text-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    color: var(--amber);
-    text-transform: uppercase;
-    margin-bottom: 0.8rem;
-  }
-
-  .modal-excerpt {
-    font-size: 0.95rem;
-    line-height: 1.9;
-    color: var(--parchment);
-  }
-
-  .modal-excerpt p + p { margin-top: 1em; }
-  .modal-excerpt em { color: var(--parchment-dim); }
-
-  .modal-footer {
-    grid-column: 1 / -1;
-    padding: 1rem 2rem;
-    border-top: 1px solid var(--modal-border);
-    display: flex; gap: 1rem; justify-content: flex-end; align-items: center;
-  }
-
-  .modal-link {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.25em;
-    color: var(--amber);
-    text-decoration: none;
-    text-transform: uppercase;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s;
-    cursor: pointer;
-    background: none;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    padding: 0;
-  }
-
-  .modal-link:hover { border-bottom-color: var(--amber); }
-
-  .modal::-webkit-scrollbar,
-  .modal-content::-webkit-scrollbar { width: 4px; }
-  .modal::-webkit-scrollbar-track,
-  .modal-content::-webkit-scrollbar-track { background: var(--modal-bg); }
-  .modal::-webkit-scrollbar-thumb,
-  .modal-content::-webkit-scrollbar-thumb { background: var(--modal-border); }
-
-  /* ── READING MODAL ── */
-  #reading-overlay {
-    position: fixed; inset: 0;
-    background: var(--black);
-    z-index: 200;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.5s ease;
-    overflow-y: auto;
-  }
-
-  #reading-overlay.visible { opacity: 1; pointer-events: all; }
-
-  .reading-inner {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 4rem 2rem 6rem;
-  }
-
-  .reading-back {
-    display: flex; align-items: center; gap: 0.5rem;
-    background: none; border: none;
-    color: var(--ash);
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    cursor: pointer;
-    margin-bottom: 3rem;
-    transition: color 0.2s;
-    padding: 0;
-  }
-
-  .reading-back:hover { color: var(--amber); }
-  .reading-back::before { content: '←'; font-family: serif; font-size: 1rem; }
-
-  .reading-header {
-    margin-bottom: 3rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--modal-border);
-  }
-
-  .reading-eyebrow {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.35em;
-    color: var(--amber);
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-
-  .reading-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 400;
-    color: var(--parchment);
-    letter-spacing: 0.08em;
-    margin-bottom: 0.5rem;
-  }
-
-  .reading-date {
-    font-size: 1rem;
-    font-style: italic;
-    color: var(--amber);
-    letter-spacing: 0.05em;
-  }
-
-  .reading-image {
-    width: auto;
-    max-width: 100%;
-    max-height: 50vh;
-    margin-bottom: 3rem;
-    border: 1px solid var(--modal-border);
-    opacity: 0.85;
-    display: block;
-  }
-
-  /* prose text */
-  .reading-body {
-    font-size: 1.1rem;
-    line-height: 1.95;
-    color: var(--parchment);
-  }
-
-  .reading-body p {
-    margin-bottom: 1.4em;
-  }
-
-  .reading-body p.section-break {
-    text-align: center;
-    color: var(--amber);
-    margin: 2.5em 0;
-    letter-spacing: 0.3em;
-  }
-
-  .reading-body em { color: var(--parchment-dim); }
-
-  /* poetry text — tighter, centred option */
-  .reading-body.poetry {
-    font-size: 1.05rem;
-    line-height: 1.7;
-  }
-
-  .reading-body.poetry p {
-    margin-bottom: 0.4em;
-  }
-
-  .reading-body.poetry p.stanza-break {
-    margin-bottom: 1.8em;
-  }
-
-  .reading-divider {
-    width: 80px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--amber), transparent);
-    margin: 3rem auto;
-  }
-
-  #reading-overlay::-webkit-scrollbar { width: 4px; }
-  #reading-overlay::-webkit-scrollbar-track { background: var(--black); }
-  #reading-overlay::-webkit-scrollbar-thumb { background: var(--modal-border); }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 640px) {
-    .modal { grid-template-columns: 1fr; }
-    .modal-image { grid-column: 1; }
-    .modal-content { grid-column: 1; padding: 0 1.5rem 1.5rem; }
-    .modal-footer { grid-column: 1; }
-  }
-</style>
+<link rel="stylesheet" href="./src/styles/wheel-standalone.css">
 </head>
 <body>
 
@@ -574,93 +31,123 @@
   <div class="wheel-bg"></div>
   <p class="wheel-title">The Wheel</p>
 
-  <svg id="wheel-svg" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+  <svg id="wheel-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <circle cx="100" cy="100" r="92" class="wheel-ring-outer"/>
     <circle cx="100" cy="100" r="78" class="wheel-ring"/>
     <circle cx="100" cy="100" r="24" class="wheel-ring" opacity="0.2"/>
     <circle cx="100" cy="100" r="50" class="wheel-ring" opacity="0.1"/>
-    <line x1="100" y1="22" x2="100" y2="178" class="wheel-spoke"/>
-    <line x1="22" y1="100" x2="178" y2="100" class="wheel-spoke"/>
-    <line x1="44.9" y1="44.9" x2="155.1" y2="155.1" class="wheel-cross-spoke"/>
-    <line x1="155.1" y1="44.9" x2="44.9" y2="155.1" class="wheel-cross-spoke"/>
+    <defs>
+      <clipPath id="center-mask">
+        <path fill-rule="evenodd" d="M0 0h200v200H0Z M100 100m-50,0a50,50 0 1,0 100,0a50,50 0 1,0-100,0Z"/>
+      </clipPath>
+    </defs>
+    <g clip-path="url(#center-mask)">
+      <line x1="100" y1="22" x2="100" y2="50" class="wheel-spoke"/>
+      <line x1="100" y1="150" x2="100" y2="178" class="wheel-spoke"/>
+      <line x1="22" y1="100" x2="50" y2="100" class="wheel-spoke"/>
+      <line x1="150" y1="100" x2="178" y2="100" class="wheel-spoke"/>
+      <line x1="44.9" y1="44.9" x2="64.7" y2="64.7" class="wheel-cross-spoke"/>
+      <line x1="135.3" y1="135.3" x2="155.1" y2="155.1" class="wheel-cross-spoke"/>
+      <line x1="155.1" y1="44.9" x2="135.3" y2="64.7" class="wheel-cross-spoke"/>
+      <line x1="64.7" y1="135.3" x2="44.9" y2="155.1" class="wheel-cross-spoke"/>
+    </g>
     <text x="100" y="58" class="season-label" opacity="0.3">DARK HALF</text>
     <text x="100" y="148" class="season-label" opacity="0.3">LIGHT HALF</text>
     <text x="100" y="97" class="wheel-centre-title">THE</text>
     <text x="100" y="104" class="wheel-centre-title">WHEEL</text>
 
-    <g class="sabbat-node" onclick="openModal('yule')">
+    <g class="sabbat-node" data-sabbat="yule" onclick="openModal('yule')">
       <circle cx="100" cy="22" r="10"/>
       <circle class="moon-shell" cx="100" cy="22" r="8"/>
       <circle class="moon-phase full" cx="100" cy="22" r="6"/>
-      <text x="100" y="40" class="node-name">YULE</text>
-      <text x="100" y="46" class="node-date">Winter Solstice</text>
+      <text x="100" y="48" class="node-name">YULE</text>
+      <text x="100" y="54" class="node-date">Winter Solstice</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('imbolc')">
+    <g class="sabbat-node" data-sabbat="imbolc" onclick="openModal('imbolc')">
       <circle cx="145.1" cy="44.9" r="10"/>
       <circle class="moon-shell" cx="145.1" cy="44.9" r="8"/>
       <circle class="moon-phase" cx="145.1" cy="44.9" r="6"/>
       <circle class="moon-shadow" cx="148.1" cy="44.9" r="6"/>
-      <text x="145.1" y="62" class="node-name">IMBOLC</text>
-      <text x="145.1" y="68" class="node-date">~1 February</text>
+      <text x="165" y="52" class="node-name">IMBOLC</text>
+      <text x="165" y="58" class="node-date">~1 February</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('ostara')">
+    <g class="sabbat-node" data-sabbat="ostara" onclick="openModal('ostara')">
       <circle cx="178" cy="100" r="10"/>
       <circle class="moon-shell" cx="178" cy="100" r="8"/>
       <circle class="moon-phase" cx="178" cy="100" r="6"/>
       <circle class="moon-shadow" cx="178" cy="97" r="6"/>
-      <text x="178" y="118" class="node-name">OSTARA</text>
-      <text x="178" y="124" class="node-date">Spring Equinox</text>
+      <text x="194" y="104" class="node-name">OSTARA</text>
+      <text x="194" y="110" class="node-date">Spring Equinox</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('beltane')">
+    <g class="sabbat-node" data-sabbat="beltane" onclick="openModal('beltane')">
       <circle cx="155.1" cy="155.1" r="10"/>
       <circle class="moon-shell" cx="155.1" cy="155.1" r="8"/>
       <circle class="moon-phase" cx="155.1" cy="155.1" r="6"/>
       <circle class="moon-shadow" cx="152.1" cy="155.1" r="6"/>
-      <text x="155.1" y="173" class="node-name">BELTANE</text>
-      <text x="155.1" y="179" class="node-date">~1 May</text>
+      <text x="165" y="176" class="node-name">BELTANE</text>
+      <text x="165" y="182" class="node-date">~1 May</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('litha')">
+    <g class="sabbat-node" data-sabbat="litha" onclick="openModal('litha')">
       <circle cx="100" cy="178" r="10"/>
       <circle class="moon-shell" cx="100" cy="178" r="8"/>
       <circle class="moon-phase new" cx="100" cy="178" r="6"/>
-      <text x="100" y="196" class="node-name">LITHA</text>
-      <text x="100" y="202" class="node-date">Summer Solstice</text>
+      <text x="100" y="204" class="node-name">LITHA</text>
+      <text x="100" y="210" class="node-date">Summer Solstice</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('lughnasadh')">
+    <g class="sabbat-node" data-sabbat="lughnasadh" onclick="openModal('lughnasadh')">
       <circle cx="44.9" cy="155.1" r="10"/>
       <circle class="moon-shell" cx="44.9" cy="155.1" r="8"/>
       <circle class="moon-phase" cx="44.9" cy="155.1" r="6"/>
       <circle class="moon-shadow" cx="42" cy="155.1" r="6"/>
-      <text x="44.9" y="173" class="node-name">LUGHNASADH</text>
-      <text x="44.9" y="179" class="node-date">~1 August</text>
+      <text x="35" y="176" class="node-name">LUGHNASADH</text>
+      <text x="35" y="182" class="node-date">~1 August</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('mabon')">
+    <g class="sabbat-node" data-sabbat="mabon" onclick="openModal('mabon')">
       <circle cx="22" cy="100" r="10"/>
       <circle class="moon-shell" cx="22" cy="100" r="8"/>
       <circle class="moon-phase" cx="22" cy="100" r="6"/>
       <circle class="moon-shadow" cx="22" cy="97" r="6"/>
-      <text x="22" y="118" class="node-name">MABON</text>
-      <text x="22" y="124" class="node-date">Autumn Equinox</text>
+      <text x="6" y="104" class="node-name">MABON</text>
+      <text x="6" y="110" class="node-date">Autumn Equinox</text>
     </g>
 
-    <g class="sabbat-node" onclick="openModal('samhain')">
+    <g class="sabbat-node" data-sabbat="samhain" onclick="openModal('samhain')">
       <circle cx="44.9" cy="44.9" r="10"/>
       <circle class="moon-shell" cx="44.9" cy="44.9" r="8"/>
       <circle class="moon-phase" cx="44.9" cy="44.9" r="6"/>
       <circle class="moon-shadow" cx="47.9" cy="44.9" r="6"/>
-      <text x="44.9" y="62" class="node-name">SAMHAIN</text>
-      <text x="44.9" y="68" class="node-date">~31 October</text>
+      <text x="35" y="52" class="node-name">SAMHAIN</text>
+      <text x="35" y="58" class="node-date">~31 October</text>
     </g>
   </svg>
 
-  <p class="wheel-hint">Select a sabbat to read</p>
-</div>
+  <div class="wheel-prose-hub">
+    <div class="prose-grid">
+      <div class="prose-item">
+        <img src="assets/images/shapeofit.png" alt="The Shape of It" class="prose-image"/>
+        <p class="prose-label">The Shape of It</p>
+      </div>
+      <div class="prose-item">
+        <img src="assets/images/TheCycle.png" alt="The Cycle" class="prose-image"/>
+        <p class="prose-label">The Cycle</p>
+      </div>
+      <div class="prose-item">
+        <img src="assets/images/TheCrossing.png" alt="The Crossing" class="prose-image"/>
+        <p class="prose-label">The Crossing</p>
+      </div>
+      <div class="prose-item">
+        <img src="assets/images/theending.png" alt="The Ending" class="prose-image"/>
+        <p class="prose-label">The Ending</p>
+      </div>
+    </div>
+  </div>
+
 
 <!-- ── PREVIEW MODAL ── -->
 <div id="modal-overlay" onclick="closeModalOnOverlay(event)">
@@ -697,7 +184,7 @@
       <h1 class="reading-title" id="reading-title">—</h1>
       <p class="reading-date" id="reading-date">—</p>
     </div>
-    <img id="reading-image" class="reading-image" src="" alt="" style="display:none"/>
+    <img id="reading-image" class="reading-image hidden" alt="" />
     <div class="reading-divider"></div>
     <div class="reading-body" id="reading-body"></div>
   </div>
@@ -1079,10 +566,9 @@ function openModal(key) {
   if (!data) return;
   currentSabbat = key;
 
-  document.querySelectorAll('.sabbat-node circle').forEach(c => {
-    c.style.fill = '';
-    c.style.stroke = '';
-  });
+  document.querySelectorAll('.sabbat-node.active').forEach(node => node.classList.remove('active'));
+  const activeNode = document.querySelector(`.sabbat-node[data-sabbat="${key}"]`);
+  if (activeNode) activeNode.classList.add('active');
 
   document.getElementById('modal-name').textContent = data.name;
   const modalDate = document.getElementById('modal-date');
@@ -1098,11 +584,18 @@ function openModal(key) {
   document.getElementById('modal-excerpt').innerHTML = data.excerpt;
 
   const imgWrap = document.getElementById('modal-image-wrap');
-  if (data.imageSrc) {
-    imgWrap.outerHTML = `<div class="modal-image" style="padding:1.5rem;display:flex;align-items:flex-start;"><img src="${data.imageSrc}" alt="${data.name}" style="width:100%;height:auto;display:block;border:1px solid var(--modal-border);opacity:0.9;" onerror="this.style.display='none'"/></div>`;
-  } else {
-    const wrap = document.getElementById('modal-image-wrap') || imgWrap;
-    if (wrap) wrap.innerHTML = `<span>Image forthcoming</span>`;
+  if (imgWrap) {
+    if (data.imageSrc) {
+      imgWrap.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = data.imageSrc;
+      img.alt = data.name;
+      img.className = 'modal-image-content';
+      img.onerror = () => { img.style.display = 'none'; };
+      imgWrap.appendChild(img);
+    } else {
+      imgWrap.innerHTML = '<span>Image forthcoming</span>';
+    }
   }
 
   document.getElementById('modal-overlay').classList.add('visible');
@@ -1110,6 +603,7 @@ function openModal(key) {
 
 function closeModal() {
   document.getElementById('modal-overlay').classList.remove('visible');
+  resetActiveNodes();
 }
 
 function closeModalOnOverlay(e) {
@@ -1136,9 +630,9 @@ function openReading() {
   if (data.imageSrc) {
     img.src = data.imageSrc;
     img.alt = data.name;
-    img.style.display = 'block';
+    img.classList.add('visible');
   } else {
-    img.style.display = 'none';
+    img.classList.remove('visible');
   }
 
   document.getElementById('reading-body').innerHTML = data.fullText;
@@ -1148,6 +642,11 @@ function openReading() {
 
 function closeReading() {
   document.getElementById('reading-overlay').classList.remove('visible');
+  resetActiveNodes();
+}
+
+function resetActiveNodes() {
+  document.querySelectorAll('.sabbat-node.active, .prose-node.active').forEach(node => node.classList.remove('active'));
 }
 
 document.addEventListener('keydown', e => {
