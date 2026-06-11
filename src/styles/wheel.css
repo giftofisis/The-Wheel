@@ -2,7 +2,8 @@
   #wheel-page {
     position: fixed; inset: 0;
     display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+    align-items: center; justify-content: flex-start;
+    padding-top: 2rem;
     opacity: 0; pointer-events: none;
     transition: opacity 1.2s ease;
   }
@@ -39,8 +40,8 @@
 
   #wheel-svg {
     position: relative; z-index: 1;
-    width: min(85vw, 85vh);
-    height: min(85vw, 85vh);
+    width: min(90vw, 90vh);
+    height: min(90vw, 90vh);
   }
 
   .wheel-prose-hub {
@@ -110,7 +111,7 @@
     line-height: 1.2;
     cursor: pointer;
     padding: 0.35rem 0.4rem;
-    border-bottom: 1px solid rgba(168, 152, 128, 0.35);
+    /* border-bottom: 1px solid rgba(168, 152, 128, 0.35); */
     transition: color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
   }
 
