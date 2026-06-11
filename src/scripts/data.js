@@ -6,7 +6,8 @@ export const sabbats = {
     "description": "A central piece about recurrence, return, and the shape the year makes as it turns through itself.",
     "textLabel": "From the centre",
     "excerpt": "<p>This piece belongs at the centre of the wheel, where the turning begins to mean something more than simple motion.</p>",
-    "textSrc": "./src/texts/cycle.html"
+    "textSrc": "./src/texts/cycle.html",
+    "imageSrc": "./assets/images/thecycle.png"
   },
   "crossing": {
     "name": "The Crossing",
@@ -15,7 +16,8 @@ export const sabbats = {
     "description": "A threshold piece about passage, change, and the moment one thing becomes another.",
     "textLabel": "From the centre",
     "excerpt": "<p>This piece sits in the middle of the wheel, at the point where one state gives way to the next.</p>",
-    "textSrc": "./src/texts/crossing.html"
+    "textSrc": "./src/texts/crossing.html",
+    "imageSrc": "./assets/images/thecrossing.png"
   },
   "ending": {
     "name": "The Ending",
@@ -24,7 +26,8 @@ export const sabbats = {
     "description": "A piece about completion, loss, and the particular silence that follows a thing reaching its end.",
     "textLabel": "From the centre",
     "excerpt": "<p>This piece holds the part of the cycle where release matters as much as arrival.</p>",
-    "textSrc": "./src/texts/ending.html"
+    "textSrc": "./src/texts/ending.html",
+    "imageSrc": "./assets/images/theending.png"
   },
   "shape-of-it": {
     "name": "The Shape of It",
@@ -33,7 +36,8 @@ export const sabbats = {
     "description": "A piece about pattern, arrangement, and the moment the whole thing becomes visible at once.",
     "textLabel": "From the centre",
     "excerpt": "<p>This piece traces the outline of the world as it can only be seen when the wheel is read whole.</p>",
-    "textSrc": "./src/texts/shape-of-it.html"
+    "textSrc": "./src/texts/shape-of-it.html",
+    "imageSrc": "./assets/images/shapeofit.png"
   },
   "yule": {
     "name": "Yule",
