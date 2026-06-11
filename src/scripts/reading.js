@@ -16,12 +16,18 @@ export async function openReading() {
   document.getElementById('reading-date').textContent = data.date;
 
   const img = document.getElementById('reading-image');
-  img.src = data.imageSrc;
-  img.alt = data.name;
-  img.style.display = 'block';
-  img.onerror = () => {
+  if (data.imageSrc) {
+    img.src = data.imageSrc;
+    img.alt = data.name;
+    img.style.display = 'block';
+    img.onerror = () => {
+      img.style.display = 'none';
+    };
+  } else {
+    img.removeAttribute('src');
+    img.alt = '';
     img.style.display = 'none';
-  };
+  }
 
   const body = document.getElementById('reading-body');
   body.innerHTML = await loadText(data);

@@ -6,6 +6,11 @@ function renderImage(data) {
   const imageArea = document.getElementById('modal-image-area');
   imageArea.innerHTML = '';
 
+  if (!data.imageSrc) {
+    imageArea.innerHTML = '<div class="modal-image-placeholder" id="modal-image-wrap"><span>No image for this piece</span></div>';
+    return;
+  }
+
   const img = document.createElement('img');
   img.src = data.imageSrc;
   img.alt = data.name;
@@ -22,8 +27,8 @@ export function openModal(key) {
   if (!data) return;
   state.currentSabbat = key;
 
-  document.querySelectorAll('.sabbat-node').forEach(node => {
-    node.classList.toggle('active', node.dataset.sabbat === key);
+  document.querySelectorAll('.sabbat-node, .prose-node').forEach(node => {
+    node.classList.toggle('active', node.dataset.sabbat === key || node.dataset.entry === key);
   });
 
   document.getElementById('modal-name').textContent = data.name;

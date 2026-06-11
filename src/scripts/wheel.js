@@ -23,4 +23,16 @@ export function initWheel() {
       }
     });
   });
+
+  document.querySelectorAll('.prose-node').forEach(node => {
+    const key = node.dataset.entry;
+    node.setAttribute('aria-label', `Open ${node.textContent.trim()}`);
+    node.addEventListener('click', () => openModal(key));
+    node.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openModal(key);
+      }
+    });
+  });
 }
