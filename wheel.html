@@ -198,6 +198,20 @@
     filter: drop-shadow(0 0 4px rgba(240,168,85,0.5));
   }
 
+  .sabbat-node circle.moon-shell {
+    fill: rgba(193,127,58,0.08);
+    stroke: var(--ash);
+    stroke-width: 0.7;
+  }
+
+  .sabbat-node circle.moon-phase {
+    fill: var(--parchment-dim);
+  }
+
+  .sabbat-node circle.moon-shadow {
+    fill: var(--black);
+  }
+
   .sabbat-node text.node-name {
     font-family: 'Cinzel', serif;
     font-size: 5.5px;
@@ -320,7 +334,7 @@
     display: flex; align-items: flex-start;
   }
 
-  .modal-image img { width: 100%; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
+  .modal-image img { width: auto; max-width: 100%; max-height: 50vh; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
 
   .modal-image-placeholder {
     width: 100%;
@@ -472,7 +486,9 @@
   }
 
   .reading-image {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
+    max-height: 50vh;
     margin-bottom: 3rem;
     border: 1px solid var(--modal-border);
     opacity: 0.85;
@@ -574,50 +590,72 @@
 
     <g class="sabbat-node" onclick="openModal('yule')">
       <circle cx="100" cy="22" r="10"/>
-      <text x="100" y="21" class="node-name">YULE</text>
-      <text x="100" y="27" class="node-date">Winter Solstice</text>
+      <circle class="moon-shell" cx="100" cy="22" r="8"/>
+      <circle class="moon-phase full" cx="100" cy="22" r="6"/>
+      <text x="100" y="40" class="node-name">YULE</text>
+      <text x="100" y="46" class="node-date">Winter Solstice</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('imbolc')">
       <circle cx="145.1" cy="44.9" r="10"/>
-      <text x="145.1" y="43.9" class="node-name">IMBOLC</text>
-      <text x="145.1" y="49.9" class="node-date">~1 February</text>
+      <circle class="moon-shell" cx="145.1" cy="44.9" r="8"/>
+      <circle class="moon-phase" cx="145.1" cy="44.9" r="6"/>
+      <circle class="moon-shadow" cx="148.1" cy="44.9" r="6"/>
+      <text x="145.1" y="62" class="node-name">IMBOLC</text>
+      <text x="145.1" y="68" class="node-date">~1 February</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('ostara')">
       <circle cx="178" cy="100" r="10"/>
-      <text x="178" y="99" class="node-name">OSTARA</text>
-      <text x="178" y="105" class="node-date">Spring Equinox</text>
+      <circle class="moon-shell" cx="178" cy="100" r="8"/>
+      <circle class="moon-phase" cx="178" cy="100" r="6"/>
+      <circle class="moon-shadow" cx="178" cy="97" r="6"/>
+      <text x="178" y="118" class="node-name">OSTARA</text>
+      <text x="178" y="124" class="node-date">Spring Equinox</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('beltane')">
       <circle cx="155.1" cy="155.1" r="10"/>
-      <text x="155.1" y="154.1" class="node-name">BELTANE</text>
-      <text x="155.1" y="160.1" class="node-date">~1 May</text>
+      <circle class="moon-shell" cx="155.1" cy="155.1" r="8"/>
+      <circle class="moon-phase" cx="155.1" cy="155.1" r="6"/>
+      <circle class="moon-shadow" cx="152.1" cy="155.1" r="6"/>
+      <text x="155.1" y="173" class="node-name">BELTANE</text>
+      <text x="155.1" y="179" class="node-date">~1 May</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('litha')">
       <circle cx="100" cy="178" r="10"/>
-      <text x="100" y="177" class="node-name">LITHA</text>
-      <text x="100" y="183" class="node-date">Summer Solstice</text>
+      <circle class="moon-shell" cx="100" cy="178" r="8"/>
+      <circle class="moon-phase new" cx="100" cy="178" r="6"/>
+      <text x="100" y="196" class="node-name">LITHA</text>
+      <text x="100" y="202" class="node-date">Summer Solstice</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('lughnasadh')">
       <circle cx="44.9" cy="155.1" r="10"/>
-      <text x="44.9" y="154.1" class="node-name">LUGHNASADH</text>
-      <text x="44.9" y="160.1" class="node-date">~1 August</text>
+      <circle class="moon-shell" cx="44.9" cy="155.1" r="8"/>
+      <circle class="moon-phase" cx="44.9" cy="155.1" r="6"/>
+      <circle class="moon-shadow" cx="42" cy="155.1" r="6"/>
+      <text x="44.9" y="173" class="node-name">LUGHNASADH</text>
+      <text x="44.9" y="179" class="node-date">~1 August</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('mabon')">
       <circle cx="22" cy="100" r="10"/>
-      <text x="22" y="99" class="node-name">MABON</text>
-      <text x="22" y="105" class="node-date">Autumn Equinox</text>
+      <circle class="moon-shell" cx="22" cy="100" r="8"/>
+      <circle class="moon-phase" cx="22" cy="100" r="6"/>
+      <circle class="moon-shadow" cx="22" cy="97" r="6"/>
+      <text x="22" y="118" class="node-name">MABON</text>
+      <text x="22" y="124" class="node-date">Autumn Equinox</text>
     </g>
 
     <g class="sabbat-node" onclick="openModal('samhain')">
       <circle cx="44.9" cy="44.9" r="10"/>
-      <text x="44.9" y="43.9" class="node-name">SAMHAIN</text>
-      <text x="44.9" y="49.9" class="node-date">~31 October</text>
+      <circle class="moon-shell" cx="44.9" cy="44.9" r="8"/>
+      <circle class="moon-phase" cx="44.9" cy="44.9" r="6"/>
+      <circle class="moon-shadow" cx="47.9" cy="44.9" r="6"/>
+      <text x="44.9" y="62" class="node-name">SAMHAIN</text>
+      <text x="44.9" y="68" class="node-date">~31 October</text>
     </g>
   </svg>
 
@@ -681,7 +719,7 @@ const sabbats = {
     excerpt: `<p>We kept the fires low on the longest night.</p>
               <p>Not from neglect. Every hearth had been tended since dark fell, the wood stacked, the flames kept. But low was right for the longest night — the light held close rather than thrown outward, the village folding in on itself the way the year folded in on itself.</p>
               <p><em>The light in the window changed quality just before dawn. Those of us who were still awake felt it before we saw it. A shift in the dark. Something released. Something taken up.</em></p>`,
-    imageSrc: "Yule2.png",
+    imageSrc: "assets/images/01Yule.png",
     fullText: `
       <p>We kept the fires low on the longest night.</p>
       <p>Not from neglect. Every hearth had been tended since dark fell, the wood stacked, the flames kept. But low was right for the longest night — the light held close rather than thrown outward, the village folding in on itself the way the year folded in on itself, drawing everything toward the centre.</p>
@@ -709,7 +747,7 @@ const sabbats = {
     excerpt: `<p>From outside, Tom and David's front window was the warmest thing on the street.</p>
               <p>The beeswax candles were everywhere — small points of amber light that had nothing of the electric about them, just the warm unsteady honey glow of something made from living things burning slowly and sweetly in the February dark.</p>
               <p><em>Eight snowdrops, fully open, their small white heads bowed slightly under the weight of the afternoon's snow, their green stems impossibly delicate against the grey February flagstones.</em></p>`,
-    imageSrc: "",
+    imageSrc: "assets/images/02Imbolc.png",
     fullText: `
       <p>The snow had been falling since two.</p>
       <p>Not dramatically — just steadily, the quiet determined kind that doesn't announce itself, that you notice has been happening for a while before you register that it's happening at all. It had settled on the window boxes of the terrace and on the doorsteps and on the rooftops in an even, patient layer, and it had muffled the street sounds the way snow always does, that particular February hush that makes a city briefly unfamiliar and briefly, grudgingly beautiful.</p>
@@ -762,7 +800,7 @@ const sabbats = {
     excerpt: `<p>We knew before we saw it.</p>
               <p>The light had been changing for weeks — arriving a little earlier each morning and staying a little later each evening, the difference too small to measure on any single day and unmistakable across the span of them.</p>
               <p><em>At the field's crossing, we left what we had brought. We did not linger. We set it down and walked back and did not look behind us, because some things are witnessed by the leaving rather than the watching.</em></p>`,
-    imageSrc: "",
+    imageSrc: "assets/images/03ostara.png",
     fullText: `
       <p>We knew before we saw it.</p>
       <p>The light had been changing for weeks — not dramatically, not all at once, but in the particular way it changed at this time of year, arriving a little earlier each morning and staying a little later each evening, the difference too small to measure on any single day and unmistakable across the span of them. The fields were beginning to say something with their colour. The birds had been saying it for a fortnight.</p>
@@ -792,7 +830,7 @@ const sabbats = {
     excerpt: `<p>The hawthorn was out.</p>
               <p>Not the suggestion of it, not the first tentative white along the hedgerow, but fully, completely, recklessly out — every branch of the old tree at the garden's edge loaded with blossom until it bowed slightly under its own extravagance, and the smell of it moving across the grass in warm pulses.</p>
               <p><em>The fire was already laid but not yet lit, a careful construction of seasoned oak in the centre of the lawn, patient and waiting.</em></p>`,
-    imageSrc: "",
+    imageSrc: "assets/images/04Beltane.png",
     fullText: `
       <p>The hawthorn was out.</p>
       <p>Not the suggestion of it, not the first tentative white along the hedgerow, but fully, completely, recklessly out — every branch of the old tree at the garden's edge loaded with blossom until it bowed slightly under its own extravagance, and the smell of it moving across the grass in warm pulses with every shift of the May evening air. Sweet and green and faintly animal. The smell that doesn't have a polite name.</p>
@@ -839,7 +877,7 @@ const sabbats = {
     excerpt: `<p>We did not sleep the short night.</p>
               <p>Not from anxiety — there was nothing anxious about it. We stayed awake because the short night asked to be witnessed, the way the long night asked to be held. Different vigils for different hinges of the year.</p>
               <p><em>The hinge of the year turning on its point, the light at its peak, the dark at its furthest and beginning its return.</em></p>`,
-    imageSrc: "",
+    imageSrc: "assets/images/05litha.png",
     fullText: `
       <p>We did not sleep the short night.</p>
       <p>Not from anxiety — there was nothing anxious about it, there never had been. We stayed awake because the short night asked to be witnessed, the way the long night asked to be held. Different vigils for different hinges of the year. At Yule we folded inward and kept our fires low and waited. At Litha we went out.</p>
@@ -870,7 +908,7 @@ const sabbats = {
     excerpt: `<p>The incense had been burning since noon.</p>
               <p>Not heavily — Harry knew the difference between a room that breathed and a room that choked — but steadily, the small braziers on the altar tended through the afternoon until the smell had worked its way into every corner of the flat.</p>
               <p><em>"The summer's in the barn," Harry said softly. Not a line from any script. Just the truth of it, said plainly.</em></p>`,
-    imageSrc: "",
+    imageSrc: "assets/images/06lammas.png",
     fullText: `
       <p>The incense had been burning since noon.</p>
       <p>Not heavily — Harry knew the difference between a room that breathed and a room that choked — but steadily, the small braziers on the altar tended through the afternoon until the smell had worked its way into every corner of the flat, into the curtains and the books on the shelves and the dried herbs hanging in the kitchen doorway. Mugwort and meadowsweet and something underneath them both that was just August, just the particular smell of a summer that knew it was ending.</p>
@@ -932,7 +970,7 @@ const sabbats = {
     excerpt: `<p>We noticed it in the quality of the morning light first.</p>
               <p>The light itself had changed quality overnight, the gold of it deeper and more amber, the shadows longer even at noon, the whole world looking slightly more like a painting of itself than it had the day before.</p>
               <p><em>The light stood equal with the dark for one day. We felt it in our bodies — not as an abstraction, not as a calculation, but as a physical fact.</em></p>`,
-    imageSrc: "Mabon.png",
+    imageSrc: "assets/images/07Mabon.png",
     fullText: `
       <p>We noticed it in the quality of the morning light first.</p>
       <p>Not the length of it — we had been watching the days shorten since Litha, the evenings arriving earlier, the mornings taking longer to fully commit. That had been gradual, measurable, the kind of change you track. This was different. The light itself had changed quality overnight, the gold of it deeper and more amber, the shadows longer even at noon, the whole world looking slightly more like a painting of itself than it had the day before.</p>
@@ -963,7 +1001,7 @@ const sabbats = {
     excerpt: `<p>It was half-past midnight on Samhain.</p>
               <p>We were sitting in a circle on Lara's living room rug, our knees nearly touching because the room wasn't built for gatherings.</p>
               <p><em>And then. The candle in the pasta jar stopped moving. A thin column of light, perfectly vertical, burning without tremor in a room that hadn't changed, in a draft that hadn't stopped.</em></p>`,
-    imageSrc: "Samhain.png",
+    imageSrc: "assets/images/08Samhain.png",
     fullText: `
       <p>The radiator in the corner was knocking — three sharp clicks and a long, wet hiss, regular as a faulty clock. Four floors down, the night buses were still cutting through the rain on the ring road, their low, diesel rumble vibrating up through the concrete foundations of the block and into the soles of my bare feet. It was half-past midnight on Samhain.</p>
       <p>We were sitting in a circle on Lara's living room rug, our knees nearly touching because the room wasn't built for gatherings.</p>
@@ -1047,7 +1085,14 @@ function openModal(key) {
   });
 
   document.getElementById('modal-name').textContent = data.name;
-  document.getElementById('modal-date').textContent = data.date;
+  const modalDate = document.getElementById('modal-date');
+  if (data.date) {
+    modalDate.textContent = data.date;
+    modalDate.style.display = '';
+  } else {
+    modalDate.textContent = '';
+    modalDate.style.display = 'none';
+  }
   document.getElementById('modal-description').textContent = data.description;
   document.getElementById('modal-text-label').textContent = data.textLabel;
   document.getElementById('modal-excerpt').innerHTML = data.excerpt;
@@ -1078,7 +1123,14 @@ function openReading() {
 
   document.getElementById('reading-eyebrow').textContent = data.eyebrow;
   document.getElementById('reading-title').textContent = data.name;
-  document.getElementById('reading-date').textContent = data.date;
+  const readingDate = document.getElementById('reading-date');
+  if (data.date) {
+    readingDate.textContent = data.date;
+    readingDate.style.display = '';
+  } else {
+    readingDate.textContent = '';
+    readingDate.style.display = 'none';
+  }
 
   const img = document.getElementById('reading-image');
   if (data.imageSrc) {

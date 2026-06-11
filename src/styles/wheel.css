@@ -139,16 +139,35 @@
   .sabbat-node { cursor: pointer; transition: all 0.2s ease; }
 
   .sabbat-node circle {
-    fill: var(--black);
+    fill: transparent;
     stroke: var(--ash);
     stroke-width: 0.8;
     transition: all 0.3s ease;
   }
 
+  .sabbat-node circle.moon-shell {
+    fill: rgba(193,127,58,0.08);
+    stroke: rgba(193,127,58,0.18);
+    stroke-width: 0.6;
+  }
+
+  .sabbat-node circle.moon-phase {
+    fill: var(--parchment-dim);
+    transition: fill 0.3s ease;
+  }
+
+  .sabbat-node circle.moon-phase.new {
+    fill: var(--black);
+  }
+
+  .sabbat-node circle.moon-shadow {
+    fill: var(--black);
+  }
+
   .sabbat-node:hover circle,
   .sabbat-node:focus-visible circle,
   .sabbat-node.active circle {
-    fill: rgba(193,127,58,0.15);
+    fill: transparent;
     stroke: var(--amber-bright);
     stroke-width: 1.2;
     filter: drop-shadow(0 0 4px rgba(240,168,85,0.5));
@@ -159,27 +178,30 @@
     font-size: 5.5px;
     fill: var(--parchment-dim);
     text-anchor: middle;
-    dominant-baseline: middle;
+    dominant-baseline: hanging;
     pointer-events: none;
     transition: fill 0.3s ease;
     letter-spacing: 0.5px;
   }
-
-  .sabbat-node:hover text.node-name,
-  .sabbat-node:focus-visible text.node-name,
-  .sabbat-node.active text.node-name { fill: var(--amber-bright); }
 
   .sabbat-node text.node-date {
     font-family: 'EB Garamond', serif;
     font-size: 4px;
     fill: var(--ash);
     text-anchor: middle;
-    dominant-baseline: middle;
+    dominant-baseline: hanging;
     pointer-events: none;
     font-style: italic;
+    opacity: 0.85;
   }
 
-  .sabbat-node:hover text.node-date { fill: var(--parchment-dim); }
+  .sabbat-node:hover text.node-name,
+  .sabbat-node:focus-visible text.node-name,
+  .sabbat-node.active text.node-name { fill: var(--amber-bright); }
+
+  .sabbat-node:hover text.node-date,
+  .sabbat-node:focus-visible text.node-date,
+  .sabbat-node.active text.node-date { fill: var(--parchment-dim); }
 
   .wheel-centre-title {
     font-family: 'Cinzel', serif;

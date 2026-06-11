@@ -75,7 +75,7 @@
     display: flex; align-items: flex-start;
   }
 
-  .modal-image img { width: 100%; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
+  .modal-image img { width: auto; max-width: 100%; max-height: 50vh; height: auto; display: block; border: 1px solid var(--modal-border); opacity: 0.9; }
 
   .modal-image-placeholder {
     width: 100%;

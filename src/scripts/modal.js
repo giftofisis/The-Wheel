@@ -32,7 +32,14 @@ export function openModal(key) {
   });
 
   document.getElementById('modal-name').textContent = data.name;
-  document.getElementById('modal-date').textContent = data.date;
+  const modalDate = document.getElementById('modal-date');
+  if (data.date) {
+    modalDate.textContent = data.date;
+    modalDate.style.display = '';
+  } else {
+    modalDate.textContent = '';
+    modalDate.style.display = 'none';
+  }
   document.getElementById('modal-description').textContent = data.description;
   document.getElementById('modal-text-label').textContent = data.textLabel;
   document.getElementById('modal-excerpt').innerHTML = data.excerpt;

@@ -11,9 +11,20 @@ export async function openReading() {
   const data = sabbats[state.currentSabbat];
   if (!data) return;
 
+  document.getElementById('modal-overlay').classList.remove('visible');
+  document.querySelectorAll('.sabbat-node.active, .prose-node.active').forEach(node => node.classList.remove('active'));
+  if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+
   document.getElementById('reading-eyebrow').textContent = data.eyebrow;
   document.getElementById('reading-title').textContent = data.name;
-  document.getElementById('reading-date').textContent = data.date;
+  const readingDate = document.getElementById('reading-date');
+  if (data.date) {
+    readingDate.textContent = data.date;
+    readingDate.style.display = '';
+  } else {
+    readingDate.textContent = '';
+    readingDate.style.display = 'none';
+  }
 
   const img = document.getElementById('reading-image');
   if (data.imageSrc) {
