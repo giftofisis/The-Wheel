@@ -209,6 +209,7 @@ html, body {
   fill: var(--parchment-dim);
   text-anchor: middle;
     dominant-baseline: hanging;
+}
 .sabbat-node:hover text.node-name,
 .sabbat-node.active text.node-name { fill: var(--amber-bright); }
 
@@ -218,7 +219,7 @@ html, body {
   fill: var(--ash);
   text-anchor: middle;
     dominant-baseline: hanging;
-
+}
 .wheel-centre-title {
   font-family: 'Cinzel', serif;
   font-size: 7px;
@@ -237,6 +238,36 @@ html, body {
   letter-spacing: 0.8px;
   opacity: 0.5;
 }
+
+/* ── LITHA LABEL ── 
+.litha-label {
+  position: relative;
+  text-align: center;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.litha-label:hover {
+  opacity: 0.7;
+}
+
+.litha-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--amber);
+  margin: 0;
+  letter-spacing: 0.1em;
+}
+
+.litha-date {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--parchment-dim);
+  margin: 0.25rem 0 0 0;
+}*/
 
 /* ── PROSE HUB ── */
 .wheel-prose-hub {

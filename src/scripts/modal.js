@@ -49,7 +49,18 @@ export function openModal(key) {
 }
 
 export function closeModal() {
+  // 1. Hide the modal overlay
   document.getElementById('modal-overlay').classList.remove('visible');
+
+  // 2. Remove the 'active' class from all wheel nodes AND prose nodes
+  document.querySelectorAll('.sabbat-node, .prose-node').forEach(node => {
+    node.classList.remove('active');
+  });
+
+  // 3. Drop browser focus so the keyboard doesn't accidentally re-trigger the node
+  if (document.activeElement) {
+    document.activeElement.blur();
+  }
 }
 
 export function initModal() {
