@@ -5,7 +5,7 @@ export const sabbats = {
     "eyebrow": "Primary Prose",
     "description": "A central piece about recurrence, return, and the shape the year makes as it turns through itself.",
     "textLabel": "From the centre",
-    "excerpt": "<p>This piece belongs at the centre of the wheel, where the turning begins to mean something more than simple motion.</p>",
+    "excerpt": "<p>This piece carries the turning itself, the long shape the year makes as it comes back round to where it began.</p>",
     "textSrc": "./src/texts/cycle.html",
     "imageSrc": "./assets/images/TheCycle.png"
   },
@@ -35,7 +35,7 @@ export const sabbats = {
     "eyebrow": "Primary Prose",
     "description": "A piece about pattern, arrangement, and the moment the whole thing becomes visible at once.",
     "textLabel": "From the centre",
-    "excerpt": "<p>This piece traces the outline of the world as it can only be seen when the wheel is read whole.</p>",
+    "excerpt": "<p>This piece holds the part of the cycle where everything separate finally settles into one picture, and the pattern becomes the point.</p>",
     "textSrc": "./src/texts/shape-of-it.html",
     "imageSrc": "./assets/images/shapeofit.png"
   },
